@@ -1,0 +1,144 @@
+.fhi-header {
+    margin-bottom: $fhi-core-space-3;
+    position: relative;
+
+    &__brand {
+        padding: $fhi-core-space-6 0 $fhi-core-space-3;
+        position: relative;
+    }
+
+    &__brand-container {
+        display: block;
+        color: $body-color;
+        position: relative;
+        text-decoration: none;
+
+        &:hover {
+            color: $body-color;
+            text-decoration: none;
+        }
+    }
+
+    &__brand-content {
+        display: flex;
+        max-width: calc(100% - #{$fhi-core-px * 100});
+    }
+
+    &__logo {
+        display: inline-block;
+        width: $fhi-core-px * 82;
+        height: $fhi-core-px * 32;
+    }
+
+    &__logo-icon {
+        background-size: contain;
+        height: 100%;
+        vertical-align: bottom;
+        width: 100%;
+    }
+
+    &__project {
+        display: none;
+        font-size: $fhi-core-font-size-4;
+        line-height: 1;
+        height: $fhi-core-px * 25;
+        padding-left: $fhi-core-space-3;
+        position: relative;
+        vertical-align: bottom;
+
+        &::before {
+            background-color: $fhi-core-red-1;
+            border-radius: ($fhi-core-px * 1.5);
+            content: "";
+            display: block;
+            height: 100%;
+            left: $fhi-core-px * -1;
+            top: $fhi-core-px * 7;
+            position: absolute;
+            width: ($fhi-core-px * 3);
+        }
+    }
+
+    &__project-name {
+        display: flex;
+        flex-direction: column;
+        font-weight: 700;
+        height: 100%;
+        justify-content: flex-end;
+        position: relative;
+        top: $fhi-core-px * 8;
+    }
+
+    &__utility-menu {
+        display: none;
+    }
+
+    &__utility-menu-content {
+        height: $fhi-core-px * 25;
+        position: absolute;
+        top: -$fhi-core-px * 46 - $fhi-core-space-4 - $fhi-core-px * 25;
+        right: $fhi-core-container-padding-xs;
+    }
+
+    &__utility-menu-container {
+        border-bottom: 1px solid $border-color;
+        padding-right: 0;
+        padding-left: 0;
+        position: relative;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .fhi-header {
+        &__project-name {
+            font-size: $fhi-core-font-size-1;
+        }
+    }
+}
+
+@include media-breakpoint-up(xs) {
+    .fhi-header {
+        &__logo {
+            margin-right: $fhi-core-space-3;
+        }
+
+        &__project {
+            display: inline-block;
+        }
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .fhi-header {
+        &__project-name {
+            top: $fhi-core-px * 9;
+        }
+    }
+}
+
+@include media-breakpoint-up(xl) {
+    .fhi-header {
+        margin-bottom: $fhi-core-space-6;
+
+        &__brand {
+            padding: $fhi-core-space-7 0 0;
+        }
+
+        &__brand-container {
+            border-bottom: 1px solid $border-color;
+            padding-bottom: $fhi-core-space-4;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        &__utility-menu {
+            display: block;
+        }
+
+        &__main-menu-container {
+            border-bottom: 1px solid $border-color;
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+}

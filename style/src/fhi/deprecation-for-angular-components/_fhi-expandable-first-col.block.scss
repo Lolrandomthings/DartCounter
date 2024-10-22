@@ -1,0 +1,39 @@
+.fhi-expandable-first-col {
+    position: relative;
+    
+    > .row {
+        overflow: hidden;
+
+        > .col-12 {
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+    }
+
+    &__main {
+        transition: min-height $fhi-drawer-animation-speed;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .fhi-expandable-first-col {
+        > .row {
+            > .col-12 {
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .fhi-expandable-first-col {
+        > .row {
+            > .col-12 {
+                &:last-child {
+                    overflow: auto;
+                }
+            }
+        }
+    }
+}

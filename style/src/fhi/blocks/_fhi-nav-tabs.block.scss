@@ -1,0 +1,21 @@
+.fhi-nav-tabs:not(.fhi-main-menu__nav) {
+    .nav-item {
+        [class*="icon-"] {
+            margin-right: $fhi-core-space-1;
+            position: relative;
+            vertical-align: bottom;
+        }
+    }
+
+    .nav-link.active,
+    .tab-content {
+        background-color: $fhi-core-blue-grey-2;
+    }
+
+    .tab-content {
+        padding-top: $fhi-core-space-5;
+        padding-right: $fhi-core-space-3;
+        padding-bottom: $fhi-core-space-3;
+        padding-left: $fhi-core-space-3;
+    }
+}

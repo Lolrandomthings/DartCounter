@@ -1,0 +1,37 @@
+.fhi-btn-icon {
+    --bs-btn-active-border-color: #{$fhi-core-grey-1};
+    --bs-btn-hover-bg: #{$fhi-core-grey-light-2};
+    --bs-btn-disabled-border-color: #{$fhi-core-grey-1};
+    --bs-btn-hover-border-color: #{$fhi-core-grey-1};
+
+    background-color: $fhi-core-white;
+    border: 1px solid $fhi-core-grey-1;
+    border-radius: $fhi-core-px * 22;
+    color: $fhi-core-charcoal-1;
+    padding-right: $fhi-core-space-3;
+    padding-left: $fhi-core-space-3;
+
+    &:focus,
+    &:hover {
+        text-decoration: none;
+    }
+
+    &--circular {
+        border-radius: 50%;
+        height: $fhi-core-px * 44;
+        padding: 0;
+        position: relative;
+        width: $fhi-core-px * 44;
+
+        [class*="icon-"] {
+            background-position: 50% 50%;
+            height: $fhi-core-px * 24;
+            left: 50%;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: $fhi-core-px * 24;
+        }
+    }
+}

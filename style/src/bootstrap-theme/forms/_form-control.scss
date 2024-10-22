@@ -1,0 +1,27 @@
+.form-control {
+    border-radius: $input-border-radius;
+    border: 1px solid $fhi-core-grey-3;
+    box-shadow: none;
+    color: $body-color;
+    font-size: 1rem;
+    height: $fhi-core-input-height;
+    transition: border-radius 0.2s ease;
+
+    &:focus,
+    &.active {
+        border-radius: calc(#{$fhi-core-input-height} / 2);
+        border-color: $fhi-core-grey-3;
+    }
+}
+
+textarea.form-control {
+    height: auto;
+}
+
+.invalid-feedback {
+    background-color: $fhi-core-pink-light-1;
+    border-radius: $border-radius;
+    color: $fhi-core-grey-4;
+    margin-bottom: 0;
+    padding: $fhi-core-space-1;
+}

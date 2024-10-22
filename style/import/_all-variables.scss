@@ -1,0 +1,12 @@
+// FHI core variables for Bootstrap theming
+@import "../src/fhi-core-variables";
+
+@import "bootstrap/scss/functions";
+@import "../src/bootstrap-theme/variables";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// FHI specific variables
+@import "../src/fhi/fhi-variables";

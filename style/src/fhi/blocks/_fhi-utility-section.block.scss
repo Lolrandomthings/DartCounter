@@ -1,0 +1,40 @@
+.fhi-utility-section {
+    &__group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 0;
+
+        a {
+            color: $body-color;
+
+            font-weight: normal;
+            text-decoration: none;
+        }
+
+        [class*="icon-"] {
+            background-size: contain;
+        }
+    }
+
+    &__divider {
+        border-left: 1px solid $fhi-core-charcoal-1;
+        margin: 0 $fhi-core-space-2;
+    }
+
+    &__btn {
+        background: transparent;
+        border: 0;
+        line-height: 0.667; //sic
+        margin: 0 $fhi-core-space-2;
+        padding: 0;
+    }
+}
+
+.fhi-utility-section--megamenu {
+    border-top: 1px solid $fhi-core-white;
+    flex: none;
+    margin-top: $fhi-core-space-3;
+    padding-top: $fhi-core-space-3;
+    width: 100%;
+}
