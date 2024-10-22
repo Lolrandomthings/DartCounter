@@ -1,0 +1,40 @@
+{
+  "name": "@folkehelseinstituttet/style",
+  "version": "6.4.0",
+  "description": "CSS styling used by Folkehelseinstituttet",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/folkehelseinstituttet/Fhi.Frontend.Style.git"
+  },
+  "keywords": [
+    "css",
+    "sass"
+  ],
+  "files": [
+    "/css",
+    "/import",
+    "/src"
+  ],
+  "style": "./css/styles.min.css",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile-css": "node-sass --include-path node_modules --output-style expanded --source-map true --source-map-contents true --precision 6 import/_all.scss css/styles.css",
+    "generate-icon-map": "node ./src/fhi/icons/generate-icon-map",
+    "minify-css": "cleancss --format breaksWith=lf --source-map --source-map-inline-sources --output css/styles.min.css css/styles.css",
+    "copy-fonts": "npx copyfiles -f ./src/fhi/typography/fonts/Lato/* ./css/Lato",
+    "prepack": "npm run compile-css && npm run minify-css && npm run copy-fonts",
+    "postversion": "git add package.json package-lock.json && git commit -mv%npm_package_version%"
+  },
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "bootstrap": "^5.3.2"
+  },
+  "devDependencies": {
+    "bootstrap": "^5.3.2",
+    "clean-css-cli": "^5.6.3",
+    "ncp": "^2.0.0",
+    "node-sass": "^9.0.0",
+    "copyfiles": "^2.4.1"
+  }
+}

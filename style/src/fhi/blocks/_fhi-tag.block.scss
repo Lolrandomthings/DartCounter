@@ -1,0 +1,125 @@
+@mixin interactive-state() {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: $fhi-core-px * 4;
+}
+
+.fhi-tag {
+    background-color: $fhi-core-white;
+    border: 1px solid transparent;
+    border-radius: $fhi-core-px * 18;
+    display: inline-block;
+    font-size: $fhi-core-font-size-1;
+
+    line-height: $fhi-core-px * 22;
+    min-height: $fhi-core-px * 36;
+    padding: ($fhi-core-px * 6) ($fhi-core-px * 12);
+    transition: background-color 0.15s ease-in-out;
+}
+
+a,
+button {
+    &.fhi-tag {
+        font-weight: 400;
+        text-decoration: none;
+
+        &,
+        &:hover {
+            color: $body-color;
+        }
+
+        &:hover {
+            background-color: $fhi-core-grey-light-2;
+
+            &.text-bg-info {
+                box-shadow: 0 0 0 ($fhi-core-px * 2) $fhi-core-blue-1 inset;
+            }
+            &.text-bg-success {
+                box-shadow: 0 0 0 ($fhi-core-px * 2) $fhi-core-green-2 inset;
+            }
+            &.text-bg-warning {
+                box-shadow: 0 0 0 ($fhi-core-px * 2) $fhi-core-orange-2 inset;
+            }
+            &.text-bg-error {
+                box-shadow: 0 0 0 ($fhi-core-px * 2) $fhi-core-pink-dark-1 inset;
+            }
+        }
+
+        &[class*="text-bg-"] {
+            @include interactive-state();
+        }
+    }
+
+    &.fhi-tag--state-dot {
+        &:hover {
+            box-shadow: 0 0 0 1px currentColor inset;
+        }
+    }
+}
+
+.fhi-tag--category {
+    border-color: $fhi-core-grey-4;
+
+    [class*="icon"] {
+        background-position: left center;
+        filter: $fhi-core-red-filter;
+        height: $fhi-core-px * 16;
+        position: relative;
+        top: $fhi-core-px * 2;
+        transition: filter 0.15s;
+    }
+}
+
+.fhi-tag--filter-option {
+    border: 1px dashed $fhi-core-charcoal-1;
+    padding-right: $fhi-core-space-6;
+    position: relative;
+
+    [class*="icon-"] {
+        background-size: $fhi-core-px * 20;
+        height: $fhi-core-px * 16;
+        position: absolute;
+        right: calc(#{$fhi-core-space-2 + $fhi-core-space-1});
+        top: 50%;
+        transform: translateY(-50%);
+        width: $fhi-core-px * 16;
+    }
+}
+
+.fhi-tag--state-dot {
+    border: 1px solid $fhi-core-grey-4;
+
+    &__icon {
+        &--info {
+            @extend .icon-info-circle-fill;
+            filter: $fhi-core-blue-filter;
+        }
+
+        &--off {
+            @extend .icon-x-circle-fill;
+            filter: $fhi-core-pink-filter;
+        }
+
+        &--on {
+            @extend .icon-check-circle-fill;
+            filter: $fhi-core-green-filter;
+        }
+
+        &--warning {
+            @extend .icon-exclamation-circle-fill;
+            filter: $fhi-core-orange-filter;
+        }
+    }
+
+    &__text {
+        @include interactive-state();
+    }
+}
+
+[class*="fhi-tag--state-dot__icon"] {
+    @extend .icon-sm;
+    border-radius: 1em;
+    margin-top: ($fhi-core-space-1 * -1);
+    margin-right: $fhi-core-space-1;
+    vertical-align: middle;
+}

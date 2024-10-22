@@ -1,0 +1,15 @@
+.fhi-btn-link {
+    @include fhi-btn(transparent, transparent, $fhi-core-blue-1, transparent);
+    border: 0;
+    padding-right: $fhi-core-space-2;
+    padding-left: $fhi-core-space-2;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+
+    &:focus,
+    &:hover {
+        &:not(:disabled) {
+            color: $fhi-core-red-2;
+        }
+    }
+}

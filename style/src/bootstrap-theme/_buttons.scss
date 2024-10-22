@@ -1,0 +1,26 @@
+.btn {
+    --bs-btn-font-weight: 400;
+
+    font-size: $fhi-core-font-size-3;
+    height: $fhi-core-px * 44;
+    line-height: 1.125;
+    max-width: 100%;
+    padding: ($fhi-core-px * 10) ($fhi-core-px * 24);
+    text-decoration-thickness: 1px;
+    text-overflow: ellipsis;
+    text-underline-offset: 4px;
+
+    [class*="icon-"] {
+        background-position: left center;
+        background-size: contain;
+        margin-right: $fhi-core-space-2;
+        position: relative;
+        top: $fhi-core-px * -1;
+        vertical-align: middle;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        pointer-events: auto;
+    }
+}

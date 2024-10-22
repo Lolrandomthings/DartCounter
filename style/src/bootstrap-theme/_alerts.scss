@@ -1,0 +1,32 @@
+.alert {
+    border-color: transparent;
+    color: $body-color;
+    display: flex;
+    line-height: 1.35;
+
+    [class*="icon-"] {
+        background-size: contain;
+        flex-shrink: 0;
+        margin-right: $fhi-core-space-2;
+    }
+
+    &:not([class*="alert-"]) {
+        background-color: $fhi-core-blue-grey-3;
+    }
+
+    a {
+        color: currentColor;
+    }
+}
+
+@each $state in map-keys($theme-colors) {
+    .alert-#{$state} {
+        --#{$prefix}alert-bg: rgba(var(--bs-#{$state}-rgb), 1);
+        --#{$prefix}alert-border-color: transparent;
+    }
+}
+
+.alert-dismissible .btn-close {
+    top: -1px;
+    right: $fhi-core-space-2;
+}

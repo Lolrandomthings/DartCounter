@@ -1,0 +1,110 @@
+.table {
+    width: auto;
+
+    thead {
+        th,
+        td {
+            background-color: $fhi-core-blue-grey-3;
+            border: 1px solid $fhi-core-white;
+        }
+
+        td:empty {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        th {
+            font-weight: 400;
+        }
+    }
+
+    tbody {
+        > tr[aria-selected="true"] {
+            > td {
+                --bs-table-striped-bg: $fhi-core-grey-light-2;
+                background-color: $fhi-core-grey-light-2;
+            }
+        }
+
+        th,
+        td {
+            &[rowspan] {
+                vertical-align: middle;
+            }
+        }
+
+        th {
+            background-color: $fhi-core-blue-grey-3;
+            border: 1px solid $fhi-core-white;
+            font-weight: 400;
+        }
+
+        tr:nth-of-type(even) th {
+            --bs-table-bg-type: $fhi-core-blue-grey-3;
+        }
+    }
+
+    .form-control {
+        min-width: $fhi-core-px * 100;
+    }
+
+    .btn {
+        font-size: $fhi-core-font-size-2;
+        height: $fhi-core-px * 33;
+        padding-top: $fhi-core-space-1;
+        padding-bottom: $fhi-core-space-1;
+
+        [class*="icon-"] {
+            background-size: 1rem auto;
+            margin-right: 0;
+        }
+    }
+}
+
+th,
+td {
+    font-size: $fhi-core-font-size-1;
+    line-height: $fhi-core-px * 20;
+    transition: background-color 0.25s ease;
+}
+
+td .invalid-feedback {
+    font-size: $fhi-core-font-size-1;
+}
+
+th[tabindex]:focus-visible {
+    box-shadow: $input-focus-box-shadow inset !important;
+}
+
+th[aria-sort] {
+    color: $fhi-core-blue-grey-7;
+    cursor: pointer;
+    padding-right: $fhi-core-space-5;
+    position: relative;
+    user-select: none;
+    vertical-align: bottom;
+
+    span {
+        line-height: 1.5rem;
+        padding-right: $fhi-core-space-3;
+    }
+
+    [class*="icon-"] {
+        background-size: contain;
+        margin-left: calc(#{$fhi-core-space-2} * -1);
+        position: absolute;
+        transform: translateX($fhi-core-space-1);
+        vertical-align: bottom;
+    }
+}
+
+th[aria-sort="ascending"],
+th[aria-sort="descending"] {
+    box-shadow: 0 0 0 1px currentColor inset !important;
+}
+
+.table-striped {
+    td {
+        border-color: $fhi-core-white;
+    }
+}

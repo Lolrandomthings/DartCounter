@@ -1,0 +1,26 @@
+.fhi-double-datepicker {
+    display: flex;
+
+    &__item {
+        &:first-child {
+            padding-right: $fhi-core-space-3;
+        }
+
+        &:last-child {
+            padding-left: $fhi-core-space-3;
+
+            .fhi-datepicker__toggler {
+                left: $fhi-core-space-3;
+            }
+        }
+    }
+
+    &__dash::before {
+        bottom: $fhi-core-px * 24;
+        content: "\2013";
+        left: 0;
+        line-height: $fhi-core-px * 2;
+        position: absolute;
+        transform: translateX(-50%);
+    }
+}
