@@ -12,8 +12,8 @@
 <body>
 
     <div id="header">
-        <h1>Reiduns <br> Darttavle</h1>
-        <a href="Regler.html"> Regler</a>
+        <h1>Reiduns <br> Dart tavle</h1>
+        <a id="linkRegler" href="Regler.html"> Regler</a>
     </div>
     <div class="table-responsive">
         <table class="table">
@@ -49,13 +49,24 @@
                     <td contenteditable="">Celle 2</td>
                 </tr>
 
-                <!-- Row for the button -->
+                <tr>
+                    <th contenteditable="">Rad 5</th>
+                    <td contenteditable="">Celle 1</td>
+                    <td contenteditable="">Celle 2</td>
+                </tr>
+
+                <!-- rade for å addPlayer-knapp -->
                 <tr id="buttonRow">
                     <td colspan="3" style="text-align: center;">
                         <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
                     </td>
 
             </tbody>
+
+
+            <div class="deletePlayer-knapp">
+                <button id="deletePlayer" class="fhi-btn-secondary">Slett spiller</button>
+            </div>
 
         </table>
     </div>

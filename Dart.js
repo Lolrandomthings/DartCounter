@@ -5,16 +5,15 @@ function saveTableData() {
     let rows = document.querySelectorAll("tbody tr");
 
     rows.forEach(row => {
+        // Exclude the row containing the "Ny spiller" button
         if (row.id !== "buttonRow") {
-
             let rowData = [];
-            let cells = row.querySelectorAll("th, td");  // Velger både th og td
+            let cells = row.querySelectorAll("th, td");
             cells.forEach(cell => {
-                rowData.push(cell.textContent.trim());  // Få innholdet i hver celle
+                rowData.push(cell.textContent.trim());
             });
             tableData.push(rowData);
         }
-
     });
 
     // Lagrer data fra tabellen inn i localstorage
@@ -40,12 +39,6 @@ window.onload = function () {
         });
     }
 };
-//Eventlistener for "Lagre"-knappen som kaller opp saveTableData-funksjonen med varsel
-document.getElementById("lagreButton").addEventListener("click", function () {
-    saveTableData(true);
-    alert("Dataene er lagret")
-});
-
 
 // Function to create a new row
 function createRow(rowCount) {
@@ -56,7 +49,7 @@ function createRow(rowCount) {
         <td contenteditable="">Celle 2</td>
     `;
     return newRow;
-} 
+}
 
 // Event listener for "Lagre"-knappen that calls the saveTableData function
 document.getElementById("lagreButton").addEventListener("click", function () {
@@ -78,6 +71,7 @@ document.getElementById("addPlayer").addEventListener("click", function () {
     // Save the table data
     saveTableData();
 });
+
 
 
 

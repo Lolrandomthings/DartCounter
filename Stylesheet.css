@@ -5,9 +5,17 @@
     color: white;
     margin-bottom: 5%;
     text-align: center;
+    padding: 30px;
     h1 {
         font-size: 30px;
     }
+    h2 {
+        font-size: 20px;
+        margin-left: 50px;
+    }
+}
+#linkRegler {
+    margin-left: 50px;
 }
 body {
     background-color: #f0f0f0;
