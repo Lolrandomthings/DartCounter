@@ -1,4 +1,4 @@
-// Define the saveTableData function
+
 function saveTableData() {
     // Samle data fra tabellen
     let tableData = [];
@@ -40,7 +40,7 @@ window.onload = function () {
     }
 };
 
-// Function to create a new row
+
 function createRow(rowCount) {
     let newRow = document.createElement("tr");
     newRow.innerHTML = `
@@ -57,7 +57,7 @@ document.getElementById("lagreButton").addEventListener("click", function () {
     alert("Dataene er lagret");
 });
 
-// Event listener for the "Ny spiller" button
+// Event listener for det "Ny spiller" button
 document.getElementById("addPlayer").addEventListener("click", function () {
     let tbody = document.querySelector("tbody");
     let rowCount = tbody.querySelectorAll("tr").length; // Get current row count
