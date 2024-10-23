@@ -48,7 +48,7 @@ window.onload = function () {
     }
 };
 
-// Event listener for the "Lagre" button that calls the saveTableData function with alert
+//Eventlistener for "Lagre"-knappen som kaller opp saveTableData-funksjonen med varsel
 document.getElementById("lagreButton").addEventListener("click", function () {
     saveTableData(true);
     alert("Dataene er lagret ")
@@ -68,6 +68,13 @@ document.getElementById("addPlayer").addEventListener("click", function () {
         <td contenteditable="">Celle 1</td>
         <td contenteditable="">Celle 2</td>
     `;
+     // AddEventListener for slette-knapp
+    newRow.getElementById(".deleteRow"). addEventListener("click",function (){
+        newRow.remove(); // Sletter raden
+        saveTableData(false);
+    });
+
+    return newRow;
 
     // Legg til den nye raden til tabellteksten
     tbody.appendChild(newRow);
