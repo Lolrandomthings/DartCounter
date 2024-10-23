@@ -1,4 +1,5 @@
-document.getElementById("lagreButton").addEventListener("click", function () {
+// Define the saveTableData function
+function saveTableData() {
     // Samle data fra tabellen
     let tableData = [];
     let rows = document.querySelectorAll("tbody tr");
@@ -13,24 +14,47 @@ document.getElementById("lagreButton").addEventListener("click", function () {
     });
 
     // Lagrer data fra tabellen inn i localstorage
-    localStorage.setItem("dartTableData", JSON.stringify(tableData));// lagrer data som en JSON string
-    alert("Dataene er lagret");
-});
+    localStorage.setItem("dartTableData", JSON.stringify(tableData)); // lagrer data som en JSON string
+}
 
 // Laster de lagrede dataene
 window.onload = function () {
     if (localStorage.getItem("dartTableData")) {
         let tableData = JSON.parse(localStorage.getItem("dartTableData"));
+        let tbody = document.querySelector("tbody");
         let rows = document.querySelectorAll("tbody tr");
 
+        // If there are fewer rows in the table than the data, create new rows
+        while (rows.length < tableData.length) {
+            let newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <th contenteditable="">Rad ${rows.length + 1}</th>
+                <td contenteditable="">Celle 1</td>
+                <td contenteditable="">Celle 2</td>
+            `;
+            tbody.appendChild(newRow);
+            rows = document.querySelectorAll("tbody tr"); // Update the rows NodeList
+        }
+
+        // Update the existing rows with the loaded data
         tableData.forEach((rowData, index) => {
             let cells = rows[index].querySelectorAll("th, td");
             rowData.forEach((cellData, cellIndex) => {
-                cells[cellIndex].textContent = cellData;
+                if (cells[cellIndex]) {
+                    cells[cellIndex].textContent = cellData;
+                }
             });
         });
     }
 };
+
+// Event listener for the "Lagre" button that calls the saveTableData function with alert
+document.getElementById("lagreButton").addEventListener("click", function () {
+    saveTableData(true);
+    alert("Dataene er lagret ")
+});
+
+
 
 // Funksjon for å legge til en ny rad (spiller) på tabellen
 document.getElementById("addPlayer").addEventListener("click", function () {
@@ -47,6 +71,7 @@ document.getElementById("addPlayer").addEventListener("click", function () {
 
     // Legg til den nye raden til tabellteksten
     tbody.appendChild(newRow);
+    saveTableData();
 });
 
 
