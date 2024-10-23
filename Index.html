@@ -11,7 +11,7 @@
 
 <body>
 
-    <div id="header" >
+    <div id="header">
         <h1>Reiduns <br> Darttavle</h1>
         <a href="Regler.html"> Regler</a>
     </div>
@@ -48,24 +48,31 @@
                     <td contenteditable="">Celle 1</td>
                     <td contenteditable="">Celle 2</td>
                 </tr>
+
+                <!-- Row for the button -->
+                <tr id="buttonRow">
+                    <td colspan="3" style="text-align: center;">
+                        <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
+                    </td>
+
             </tbody>
-            <div class="addPlayer-knapp">
-                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
-            </div>
+
         </table>
     </div>
 
     <div id="lagre-knapp">
-        <button id= "lagreButton" class="fhi-btn-primary">Lagre resultater</button>
+        <button id="lagreButton" class="fhi-btn-primary" plus>Lagre resultater</button>
     </div>
 
-   
-    <div id="footer"> 
+    <div id="deleteRow-knapp"> <button id="deleteRow" class="fhi-btn-secondary">Slette spiller</button></div>
+
+
+    <div id="footer">
         <p>Utviklet av FHI </p>
         <a href="">Om Siden</a>
         <a href="">Personvern</a>
     </div>
     <script src="Dart.js"></script>
- </body>
+</body>
 
 </html>
