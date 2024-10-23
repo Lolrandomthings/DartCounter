@@ -1,4 +1,4 @@
-document.getElementById("clickButton").addEventListener("click", function() {
+document.getElementById("lagreButton").addEventListener("click", function () {
     // Samle data fra tabellen
     let tableData = [];
     let rows = document.querySelectorAll("tbody tr");
@@ -18,9 +18,9 @@ document.getElementById("clickButton").addEventListener("click", function() {
 });
 
 // Laster de lagrede dataene
-window.onload = function() {
+window.onload = function () {
     if (localStorage.getItem("dartTableData")) {
-        let tableData = JSON.parse(localStorage.getItem("dartTableData")); 
+        let tableData = JSON.parse(localStorage.getItem("dartTableData"));
         let rows = document.querySelectorAll("tbody tr");
 
         tableData.forEach((rowData, index) => {
@@ -31,6 +31,23 @@ window.onload = function() {
         });
     }
 };
+
+// Funksjon for å legge til en ny rad (spiller) på tabellen
+document.getElementById("addPlayer").addEventListener("click", function () {
+    let tbody = document.querySelector("tbody");
+    let rowCount = tbody.querySelectorAll("tr").length + 1;  // øker antall spiller
+
+    // lager en ny row (tr)
+    let newRow = document.createElement("tr");
+    newRow.innerHTML = `
+        <th contenteditable="">Rad ${rowCount}</th>
+        <td contenteditable="">Celle 1</td>
+        <td contenteditable="">Celle 2</td>
+    `;
+
+    // Legg til den nye raden til tabellteksten
+    tbody.appendChild(newRow);
+});
 
 
 
