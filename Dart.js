@@ -1,4 +1,4 @@
-document.getElementById("clickButton").addEventListener("click", function() {
+document.getElementById("lagreButton").addEventListener("click", function() {
     // Samle data fra tabellen
     let tableData = [];
     let rows = document.querySelectorAll("tbody tr");
@@ -31,6 +31,23 @@ window.onload = function() {
         });
     }
 };
+
+// Function to add a new row (player) to the table
+document.getElementById("addPlayer").addEventListener("click", function() {
+    let tbody = document.querySelector("tbody");
+    let rowCount = tbody.querySelectorAll("tr").length + 1;  // Increment player count
+
+    // Create a new table row (tr)
+    let newRow = document.createElement("tr");
+    newRow.innerHTML = `
+        <th contenteditable="">Rad ${rowCount}</th>
+        <td contenteditable="">Celle 1</td>
+        <td contenteditable="">Celle 2</td>
+    `;
+
+    // Append the new row to the table body
+    tbody.appendChild(newRow);
+});
 
 
 
