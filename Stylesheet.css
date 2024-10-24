@@ -100,7 +100,7 @@ body {
     padding: 10px;
     border: none; 
     cursor: pointer;
-    background-color: #393c61; 
+    background-color: #0864c4; 
     color: #f0f0f0; 
     transition: background-color 0.3s;
 }
@@ -113,8 +113,8 @@ body {
 
 
 .btn-group button:hover {
-    background-color: white;  
-    color: #393c61;
+    background-color: #104484;  
+    color: white;
     border: none;
 }
 
