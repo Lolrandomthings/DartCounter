@@ -94,3 +94,18 @@ body {
     background-color: white; 
     margin-bottom: 30px;
 }
+
+.parent-container{
+    display: flex;
+    justify-content: center;
+    padding-right: 20%;
+}
+
+#currentDate {
+display: inline-flex;
+align-items: center;
+border-bottom: 2px solid #393c61;
+margin-bottom: 40px;
+margin-top: 20px;
+font-size: 18px;
+}

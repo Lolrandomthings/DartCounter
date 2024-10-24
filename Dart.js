@@ -23,7 +23,17 @@ function saveTableData() {
 window.onload = function () {
     loadTableData();
     updateTotalSum();
+    displayCurrentDate();
 };
+
+function displayCurrentDate() {
+    const dateContainer = document.getElementById("currentDate");
+    const today = new Date();
+    const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = today.toLocaleDateString('en-GB', options);
+
+    dateContainer.textContent = ` ${formattedDate}`;
+}
 
 function loadTableData() {
     if (localStorage.getItem("dartTableData")) {
