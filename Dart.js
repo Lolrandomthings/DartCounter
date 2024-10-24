@@ -31,11 +31,11 @@ function loadTableData() {
 
         // Clear existing rows except the button row
         tbody.innerHTML = `
-            <tr id="buttonRow">
-                <td colspan="3" style="text-align: center;">
-                    <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
-                </td>
-            </tr>
+        <tr id="buttonRow">
+            <td colspan="3" style="text-align: center;">
+                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
+            </td>
+        </tr>
         `;
 
         tableData.forEach((rowData, index) => {
@@ -64,8 +64,8 @@ function createRow(rowCount) {
     let newRow = document.createElement("tr");
     newRow.innerHTML = `
         <th contenteditable="">Rad ${rowCount}</th>
-        <td contenteditable="">Celle 1</td>
-        <td contenteditable="">Celle 2</td>
+        <td contenteditable="">0</td>
+        <td contenteditable="">0</td>
     `;
     return newRow;
 }
@@ -83,7 +83,14 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
 
     // Reset the table to its initial state
     let tbody = document.querySelector("tbody");
+    
+    // Clear all rows and add the initial row along with the "Ny spiller" button row
     tbody.innerHTML = `
+        <tr>
+            <th contenteditable="">legg til et navn</th>
+            <td contenteditable="">0</td>
+            <td contenteditable="">0/td>
+        </tr>
         <tr id="buttonRow">
             <td colspan="3" style="text-align: center;">
                 <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
@@ -99,3 +106,22 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
         saveTableData();
     });
 });
+
+function updateTotalSum() {
+    let total = 0;
+    let rows = document.querySelectorAll("tbody tr");
+
+    // Iterate over all rows except the last two (totalRow and buttonRow)
+    rows.forEach(row => {
+        if (row.id !== "totalRow" && row.id !== "buttonRow") {
+            let cells = row.querySelectorAll("td");
+            let throw1 = parseInt(cells[0].textContent.trim()) || 0;
+            let throw2 = parseInt(cells[1].textContent.trim()) || 0;
+            total += throw1 + throw2;
+        }
+    });
+
+    // Update the total sum in the total row
+    document.getElementById("totalSum").textContent = total;
+}
+
