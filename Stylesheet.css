@@ -1,25 +1,47 @@
 #header {
     background-color: #393c61;
-    display: flex;
-    justify-content: center;
     color: white;
     margin-bottom: 5%;
     text-align: center;
-    padding: 30px;
-
-    h1 {
-        font-size: 30px;
-    }
-
-    h2 {
-        font-size: 20px;
-        margin-left: 50px;
-    }
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
-#linkRegler {
-    margin-left: 50px;
+.tittel {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    flex-grow: 1;
 }
+
+#links {
+    display: flex;
+    gap: 30px; 
+    position: absolute;
+    right: 20px; 
+    top: 50%;
+    transform: translateY(-50%);
+    padding-right: 500px;
+}
+
+#links a {
+    color: white;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 30px;
+    margin: 0;
+}
+
+h2 {
+    font-size: 30px;
+    margin: 0;
+}
+
 
 body {
     background-color: #f0f0f0;
@@ -56,35 +78,36 @@ body {
 }
 
 .btn-group {
-
-display: flex;
-justify-content: center;
-margin-bottom: 20px;
+    display: flex;
+    border-radius: 5px; /* Rounded corners */
+    overflow: hidden; /* Ensure buttons appear connected */
+    width: 300px; /* Set a fixed width for the button group */
+    margin: 0 auto; /* Center the button group horizontally */
+    background-color: white; /* Background to match the button style */
 
 }
 
 .btn-group button {
-    display: flex;
-    justify-content: center;
-    background-color: #0067c4; /* Blue button background */
-    border: 1px solid #393c61; /* Border color */
-    color: white; /* Text color for contrast */
-    padding: 10px 24px;
+    flex: 1; /* Equal width for both buttons */
+    padding: 10px;
+    border: none; /* No individual button borders */
     cursor: pointer;
-    text-align: center; /* Center the text */
-    transition: background-color 0.3s; /* Smooth hover transition */
-    display: inline-block; /* Keep buttons inline */
-    border-radius: 4px;
+    background-color: #393c61; /* Default button background */
+    color: #f0f0f0; /* Default button text color */
+    transition: background-color 0.3s;
 }
 
-/* Ensure buttons are aligned without double borders */
-.btn-group button:not(:last-child) {
-    border-right: none;
+
+.btn-group button.active {
+    background-color: #004b8a; /* Highlighted button background */
+    color: white; /* Highlighted button text color */
 }
 
-/* Add a background color on hover */
+
 .btn-group button:hover {
-    background-color: #004b8a; /* Darker blue on hover */
+    background-color: white; /* Hover color for non-active buttons */ 
+    color: #393c61;
+    border: none;
 }
 
 
