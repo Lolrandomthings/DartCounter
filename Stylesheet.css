@@ -54,6 +54,12 @@ body {
     width: 100%;
     bottom: 0;
 }
+.linker {
+    display: flex;
+    margin-left: 1050px;
+    margin-top: 1%;
+    gap: 20px;
+}
 
 .btn-group {
 
