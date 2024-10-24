@@ -23,22 +23,19 @@
 
     </div>
 
-
-
     <div class="btn-group">
         <button>Poengtavle</button>
         <button id="nyTavleButton">Ny runde</button>
     </div>
-
-
 
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
                     <td></td>
-                    <th id="kast1"> 1. kast</th>
+                    <th id="kast1">1. kast</th>
                     <th id="kast2">2. kast</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,56 +43,51 @@
                     <th contenteditable="">Rad 1</th>
                     <td contenteditable="">0</td>
                     <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
                 </tr>
 
                 <tr id="poenger-rad2">
                     <th contenteditable="">Rad 2</th>
                     <td contenteditable="">0</td>
                     <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
                 </tr>
 
                 <tr id="poenger-rad3">
-                    <th contenteditable="">rad 3</th>
+                    <th contenteditable="">Rad 3</th>
                     <td contenteditable="">0</td>
                     <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
                 </tr>
 
                 <tr>
                     <th contenteditable="">Rad 4</th>
                     <td contenteditable="">0</td>
                     <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
                 </tr>
 
                 <tr>
                     <th contenteditable="">Rad 5</th>
                     <td contenteditable="">0</td>
                     <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
                 </tr>
 
-                <!-- Row for displaying the total sum -->
-                <tr id="totalRow">
-                    <th>Total</th>
-                    <td colspan="2" id="totalSum">0</td>
-                </tr>
-
-
-                <!-- rade for å addPlayer-knapp -->
+                <!-- Row for the "Ny spiller" button -->
                 <tr id="buttonRow">
-                    <td colspan="3" style="text-align: center;">
+                    <td colspan="4" style="text-align: center;">
                         <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
                     </td>
                 </tr>
 
             </tbody>
-
-
         </table>
     </div>
 
     <div id="lagre-knapp">
-        <button id="lagreButton" class="fhi-btn-primary" plus>Lagre resultater</button>
+        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
     </div>
-
 
     <div id="footer">
         <p>Utviklet av FHI </p>

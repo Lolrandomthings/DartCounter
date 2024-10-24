@@ -5,7 +5,7 @@ function saveTableData() {
 
     rows.forEach(row => {
         // Exclude the row containing the "Ny spiller" button
-        if (row.id !== "buttonRow") {
+        if (row.id !== "buttonRow" && row.id !== "totalRow") {
             let rowData = [];
             let cells = row.querySelectorAll("th, td");
             cells.forEach(cell => {
@@ -32,7 +32,7 @@ function loadTableData() {
         // Clear existing rows except the button row
         tbody.innerHTML = `
         <tr id="buttonRow">
-            <td colspan="3" style="text-align: center;">
+            <td colspan="4" style="text-align: center;">
                 <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
             </td>
         </tr>
@@ -52,11 +52,14 @@ function loadTableData() {
 
         // Reattach the event listener for the "Ny spiller" button
         document.getElementById("addPlayer").addEventListener("click", function () {
-            let rowCount = tbody.querySelectorAll("tr").length;
+            let rowCount = tbody.querySelectorAll("tr").length - 1; // Exclude buttonRow
             let newRow = createRow(rowCount);
             tbody.insertBefore(newRow, document.getElementById("buttonRow"));
             saveTableData();
         });
+
+        // Update the total sum for each row
+        updateTotalSum();
     }
 }
 
@@ -66,6 +69,7 @@ function createRow(rowCount) {
         <th contenteditable="">Rad ${rowCount}</th>
         <td contenteditable="">0</td>
         <td contenteditable="">0</td>
+        <td class="row-total">0</td>
     `;
     return newRow;
 }
@@ -90,9 +94,10 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
             <th contenteditable="">legg til et navn</th>
             <td contenteditable="">0</td>
             <td contenteditable="">0</td>
+            <td class="row-total">0</td>
         </tr>
         <tr id="buttonRow">
-            <td colspan="3" style="text-align: center;">
+            <td colspan="4" style="text-align: center;">
                 <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
             </td>
         </tr>
@@ -100,28 +105,27 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
 
     // Reattach the event listener for the "Ny spiller" button
     document.getElementById("addPlayer").addEventListener("click", function () {
-        let rowCount = tbody.querySelectorAll("tr").length;
+        let rowCount = tbody.querySelectorAll("tr").length - 1; // Exclude buttonRow
         let newRow = createRow(rowCount);
         tbody.insertBefore(newRow, document.getElementById("buttonRow"));
         saveTableData();
     });
+
+    // Update the total sum for each row
+    updateTotalSum();
 });
 
 function updateTotalSum() {
-    let total = 0;
     let rows = document.querySelectorAll("tbody tr");
 
-    // Iterate over all rows except the last two (totalRow and buttonRow)
+    // Iterate over all rows except the last one (buttonRow)
     rows.forEach(row => {
-        if (row.id !== "totalRow" && row.id !== "buttonRow") {
+        if (row.id !== "buttonRow") {
             let cells = row.querySelectorAll("td");
             let throw1 = parseInt(cells[0].textContent.trim()) || 0;
             let throw2 = parseInt(cells[1].textContent.trim()) || 0;
-            total += throw1 + throw2;
+            let rowTotal = throw1 + throw2;
+            row.querySelector(".row-total").textContent = rowTotal;
         }
     });
-
-    // Update the total sum in the total row
-    document.getElementById("totalSum").textContent = total;
 }
-
