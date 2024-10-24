@@ -1,11 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Darttavle</title>
+    <link rel="stylesheet" type="text/css" href="style/css/styles.min.css"> <!--FHI style pakke-->
+    <link rel="stylesheet" href="Stylesheet.css"> <!--Egen style sheet-->
 </head>
+
 <body>
-    
+
+    <div id="header">
+        <div class="tittel">
+            <h1>Reiduns </h1>
+            <h2>Tavle</h2>
+        </div>
+        <div class="links">
+            <a id="linkRegler" href="Regler.html"> Regler</a>
+            <a id="linkRegler" href="#"> Admin</a>
+        </div>
+
+    </div>
+
+    <div class="btn-group">
+        <button type="button" class="btn fhi-btn-primary" onclick="location.href='Poengtavle.html'">Poengtavle</button>
+        <button type="button" class="btn fhi-btn-primary" id="nyTavleButton">Ny runde</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td></td>
+                    <th id="kast1">1. kast</th>
+                    <th id="kast2">2. kast</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="poenger-rad1">
+                    <th contenteditable="">Rad 1</th>
+                    <td contenteditable="">0</td>
+                    <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
+                </tr>
+
+                <tr id="poenger-rad2">
+                    <th contenteditable="">Rad 2</th>
+                    <td contenteditable="">0</td>
+                    <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
+                </tr>
+
+                <tr id="poenger-rad3">
+                    <th contenteditable="">Rad 3</th>
+                    <td contenteditable="">0</td>
+                    <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
+                </tr>
+
+                <tr>
+                    <th contenteditable="">Rad 4</th>
+                    <td contenteditable="">0</td>
+                    <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
+                </tr>
+
+                <tr>
+                    <th contenteditable="">Rad 5</th>
+                    <td contenteditable="">0</td>
+                    <td contenteditable="">0</td>
+                    <td class="row-total">0</td>
+                </tr>
+
+                <!-- Row for the "Ny spiller" button -->
+                <tr id="buttonRow">
+                    <td colspan="4" style="text-align: center;">
+                        <button id="addPlayer" type="button" class="btn fhi-btn-primary">Ny spiller</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="lagre-knapp">
+        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
+    </div>
+
+    <div id="footer">
+        <p>Utviklet av FHI </p>
+        <div class="linker">
+            <a href="">Om Siden</a>
+            <a href="">Personvern</a>
+        </div>
+    </div>
+
+    <script src="Dart.js"></script>
 </body>
+
 </html>
