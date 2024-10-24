@@ -1,4 +1,4 @@
-#header {
+#header, #headerRegler {
     background-color: #393c61;
     color: white;
     margin-bottom: 5%;
@@ -8,6 +8,7 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+    padding: 1%;
 }
 
 .tittel {
