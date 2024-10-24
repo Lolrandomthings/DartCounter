@@ -89,7 +89,7 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
         <tr>
             <th contenteditable="">legg til et navn</th>
             <td contenteditable="">0</td>
-            <td contenteditable="">0/td>
+            <td contenteditable="">0</td>
         </tr>
         <tr id="buttonRow">
             <td colspan="3" style="text-align: center;">
