@@ -85,33 +85,33 @@ body {
 
 .btn-group {
     display: flex;
-    border-radius: 5px; /* Rounded corners */
-    overflow: hidden; /* Ensure buttons appear connected */
-    width: 300px; /* Set a fixed width for the button group */
-    margin: 0 auto; /* Center the button group horizontally */
-    background-color: white; /* Background to match the button style */
+    border-radius: 5px; 
+    overflow: hidden; 
+    width: 300px; 
+    margin: 0 auto; 
+    background-color: white; 
 
 }
 
 .btn-group button {
-    flex: 1; /* Equal width for both buttons */
+    flex: 1; 
     padding: 10px;
-    border: none; /* No individual button borders */
+    border: none; 
     cursor: pointer;
-    background-color: #393c61; /* Default button background */
-    color: #f0f0f0; /* Default button text color */
+    background-color: #393c61; 
+    color: #f0f0f0; 
     transition: background-color 0.3s;
 }
 
 
 .btn-group button.active {
-    background-color: #004b8a; /* Highlighted button background */
-    color: white; /* Highlighted button text color */
+    background-color: #004b8a; 
+    color: white;
 }
 
 
 .btn-group button:hover {
-    background-color: white; /* Hover color for non-active buttons */ 
+    background-color: white;  
     color: #393c61;
     border: none;
 }

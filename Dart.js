@@ -72,6 +72,34 @@ document.getElementById("addPlayer").addEventListener("click", function () {
     saveTableData();
 });
 
+// Event listener for the "Ny Tavle" button to reset the table
+document.getElementById("nyTavleButton").addEventListener("click", function () {
+    // Clear the local storage
+    localStorage.clear();
+
+    // Reset the table to its initial state
+    let tbody = document.querySelector("tbody");
+    tbody.innerHTML = `
+            <th contenteditable="">Rad1</th>
+        <td contenteditable="">Celle 1</td>
+        <td contenteditable="">Celle 2</td>
+        <tr id="buttonRow">
+            <td colspan="3" style="text-align: center;">
+                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
+            </td>
+        </tr>
+    `;
+
+    // Reattach the event listener for the "Ny spiller" button
+    document.getElementById("addPlayer").addEventListener("click", function () {
+        let rowCount = tbody.querySelectorAll("tr").length;
+        let newRow = createRow(rowCount);
+        tbody.insertBefore(newRow, document.getElementById("buttonRow"));
+        saveTableData();
+    });
+});
+
+
 
 
 
