@@ -92,30 +92,5 @@ body {
     width: 300px; 
     margin: 0 auto; 
     background-color: white; 
-
+    margin-bottom: 30px;
 }
-
-.btn-group button {
-    flex: 1; 
-    padding: 10px;
-    border: none; 
-    cursor: pointer;
-    background-color: #0864c4; 
-    color: #f0f0f0; 
-    transition: background-color 0.3s;
-}
-
-
-.btn-group button.active {
-    background-color: #004b8a; 
-    color: white;
-}
-
-
-.btn-group button:hover {
-    background-color: #104484;  
-    color: white;
-    border: none;
-}
-
-
