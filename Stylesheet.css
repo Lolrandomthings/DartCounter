@@ -17,17 +17,15 @@
     flex-grow: 1;
 }
 
-#links {
+.links {
     display: flex;
     gap: 30px; 
-    position: absolute;
+    position: relative;
     right: 20px; 
     top: 50%;
-    transform: translateY(-50%);
-    padding-right: 500px;
 }
 
-#links a {
+a:link {
     color: white;
     text-decoration: none;
 }
@@ -72,9 +70,10 @@ body {
 #footer {
     color: white;
     background-color: #393c61;
-    position: relative;
     width: 100%;
     bottom: 0;
+    padding: 10px;
+    position: fixed;
 }
 .linker {
     display: flex;
