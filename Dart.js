@@ -22,6 +22,7 @@ function saveTableData() {
 // Laster de lagrede dataene
 window.onload = function () {
     loadTableData();
+    updateTotalSum();
 };
 
 function loadTableData() {
@@ -77,13 +78,14 @@ function createRow(rowCount) {
 // Event listener for "Lagre"-knappen that calls the saveTableData function
 document.getElementById("lagreButton").addEventListener("click", function () {
     saveTableData();
+    updateTotalSum();
     alert("Dataene er lagret");
 });
 
 // Event listener for the "Ny Tavle" button to reset the table
 document.getElementById("nyTavleButton").addEventListener("click", function () {
-    // Clear the local storage
-    localStorage.clear();
+    // Save the current state of the table before clearing it
+    saveTableData();
 
     // Reset the table to its initial state
     let tbody = document.querySelector("tbody");
@@ -114,6 +116,7 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
     // Update the total sum for each row
     updateTotalSum();
 });
+
 
 function updateTotalSum() {
     let rows = document.querySelectorAll("tbody tr");
