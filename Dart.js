@@ -1,4 +1,3 @@
-
 function saveTableData() {
     // Samle data fra tabellen
     let tableData = [];
@@ -22,9 +21,22 @@ function saveTableData() {
 
 // Laster de lagrede dataene
 window.onload = function () {
+    loadTableData();
+};
+
+function loadTableData() {
     if (localStorage.getItem("dartTableData")) {
         let tableData = JSON.parse(localStorage.getItem("dartTableData"));
         let tbody = document.querySelector("tbody");
+
+        // Clear existing rows except the button row
+        tbody.innerHTML = `
+            <tr id="buttonRow">
+                <td colspan="3" style="text-align: center;">
+                    <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
+                </td>
+            </tr>
+        `;
 
         tableData.forEach((rowData, index) => {
             let newRow = createRow(index + 1);
@@ -37,9 +49,16 @@ window.onload = function () {
                 }
             });
         });
-    }
-};
 
+        // Reattach the event listener for the "Ny spiller" button
+        document.getElementById("addPlayer").addEventListener("click", function () {
+            let rowCount = tbody.querySelectorAll("tr").length;
+            let newRow = createRow(rowCount);
+            tbody.insertBefore(newRow, document.getElementById("buttonRow"));
+            saveTableData();
+        });
+    }
+}
 
 function createRow(rowCount) {
     let newRow = document.createElement("tr");
@@ -53,23 +72,8 @@ function createRow(rowCount) {
 
 // Event listener for "Lagre"-knappen that calls the saveTableData function
 document.getElementById("lagreButton").addEventListener("click", function () {
-    saveTableData(true);
-    alert("Dataene er lagret");
-});
-
-// Event listener for det "Ny spiller" button
-document.getElementById("addPlayer").addEventListener("click", function () {
-    let tbody = document.querySelector("tbody");
-    let rowCount = tbody.querySelectorAll("tr").length; // Get current row count
-
-    // Create a new row
-    let newRow = createRow(rowCount);
-
-    // Insert the new row before the button row
-    tbody.insertBefore(newRow, document.getElementById("buttonRow"));
-
-    // Save the table data
     saveTableData();
+    alert("Dataene er lagret");
 });
 
 // Event listener for the "Ny Tavle" button to reset the table
@@ -80,9 +84,6 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
     // Reset the table to its initial state
     let tbody = document.querySelector("tbody");
     tbody.innerHTML = `
-            <th contenteditable="">Rad1</th>
-        <td contenteditable="">Celle 1</td>
-        <td contenteditable="">Celle 2</td>
         <tr id="buttonRow">
             <td colspan="3" style="text-align: center;">
                 <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
@@ -98,9 +99,3 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
         saveTableData();
     });
 });
-
-
-
-
-
-
