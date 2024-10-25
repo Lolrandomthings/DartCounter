@@ -70,10 +70,11 @@ body {
 #addPlayer{
     background-color: red;
     border: none;
-    width: 100%;
+    width: 30%;
     display: flex;
     justify-content: center;
     margin-bottom: 40px;
+    margin-left: 35%;
 }
 
 
