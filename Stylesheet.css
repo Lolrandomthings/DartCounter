@@ -67,7 +67,7 @@ body {
 }
 
 #addPlayer{
-    background-color: clear;
+    background-color: #clear;
     border: none;
     width: 22.5%;
     display: flex;
@@ -76,7 +76,6 @@ body {
     margin-left: 38.7%;
     margin-top: -16px;
 }
-
 #addPlayer:hover {
     background-color: white;
 }
