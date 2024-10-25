@@ -54,7 +54,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5%;
 }
 
 #lagreButton {
@@ -68,16 +67,25 @@ body {
     transform: translate(-50%, -50%);
 }
 
+<<<<<<< HEAD
 #addPlayer {
     background-color: red;
+=======
+#addPlayer{
+    background-color: clear;
+>>>>>>> 0842411b04390dd2e714b0c5f3c21a40a5ae0f52
     border: none;
-    width: 30%;
+    width: 22.5%;
     display: flex;
     justify-content: left;
     margin-bottom: 40px;
-    margin-left: 35%;
+    margin-left: 38.7%;
+    margin-top: -16px;
 }
 
+#addPlayer:hover {
+    background-color: white;
+}
 
 #footer {
     color: white;

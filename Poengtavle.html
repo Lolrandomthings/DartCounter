@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poengtavle</title>
+    <title>Darttavle</title>
     <link rel="stylesheet" type="text/css" href="style/css/styles.min.css"> <!--FHI style pakke-->
     <link rel="stylesheet" href="Stylesheet.css"> <!--Egen style sheet-->
 </head>
@@ -27,6 +27,11 @@
         <button type="button" class="btn fhi-btn-primary" onclick="location.href='Poengtavle.html'">Poengtavle</button>
         <button type="button" class="btn fhi-btn-primary" id="nyTavleButton">Ny runde</button>
     </div>
+
+    <div class="parent-container">
+        <div id="currentDate"></div>
+    </div>
+
 
     <div class="table-responsive">
         <table class="table">
@@ -74,30 +79,31 @@
                     <td class="row-total">0</td>
                 </tr>
 
-                <!-- Row for the "Ny spiller" button -->
-                <tr id="buttonRow">
-                    <td colspan="4" style="text-align: center;">
-                        <button id="addPlayer" type="button" class="btn fhi-btn-primary">Ny spiller</button>
-                    </td>
-                </tr>
-
             </tbody>
         </table>
+        
+    </div>
+    
+    <div style="text-align: center;"> 
+        <button id="addPlayer" type="button"><i class="icon-plus icon-md"></i>Ny Spiller</button>
     </div>
 
-    <div id="lagre-knapp">
-        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
-    </div>
 
-    <div id="footer">
-        <p>Utviklet av FHI </p>
-        <div class="linker">
-            <a href="">Om Siden</a>
-            <a href="">Personvern</a>
+
+
+        <div id="lagre-knapp">
+            <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
         </div>
-    </div>
 
-    <script src="Dart.js"></script>
+        <div id="footer">
+            <p>Utviklet av FHI </p>
+            <div class="linker">
+                <a href="">Om Siden</a>
+                <a href="">Personvern</a>
+            </div>
+        </div>
+
+        <script src="Dart.js"></script>
 </body>
 
 </html>
