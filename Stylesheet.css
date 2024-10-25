@@ -67,13 +67,8 @@ body {
     transform: translate(-50%, -50%);
 }
 
-<<<<<<< HEAD
-#addPlayer {
-    background-color: red;
-=======
 #addPlayer{
     background-color: clear;
->>>>>>> 0842411b04390dd2e714b0c5f3c21a40a5ae0f52
     border: none;
     width: 22.5%;
     display: flex;
