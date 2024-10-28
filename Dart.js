@@ -5,7 +5,7 @@ function saveTableData() {
 
     rows.forEach(row => {
         // Exclude the row containing the "Ny spiller" button
-        if (row.id !== "buttonRow" && row.id !== "totalRow") {
+        if (row.id !== "totalRow") {
             let rowData = [];
             let cells = row.querySelectorAll("th, td");
             cells.forEach(cell => {
@@ -33,8 +33,6 @@ window.onload = function () {
         tbody.appendChild(newRow); // Add the new row to the end of the table body
         saveTableData(); // Save the updated table data
     });
-
-
 };
 
 function displayCurrentDate() {
@@ -51,18 +49,12 @@ function loadTableData() {
         let tableData = JSON.parse(localStorage.getItem("dartTableData"));
         let tbody = document.querySelector("tbody");
 
-        // Clear existing rows except the button row
-        tbody.innerHTML = `
-        <tr id="buttonRow">
-            <td colspan="4" style="text-align: center;">
-                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
-            </td>
-        </tr>
-        `;
+        // Clear existing rows
+        tbody.innerHTML = '';
 
         tableData.forEach((rowData, index) => {
             let newRow = createRow(index + 1);
-            tbody.insertBefore(newRow, document.getElementById("buttonRow"));
+            tbody.appendChild(newRow);
 
             let cells = newRow.querySelectorAll("th, td");
             rowData.forEach((cellData, cellIndex) => {
@@ -70,14 +62,6 @@ function loadTableData() {
                     cells[cellIndex].textContent = cellData;
                 }
             });
-        });
-
-        // Reattach the event listener for the "Ny spiller" button
-        document.getElementById("addPlayer").addEventListener("click", function () {
-            let rowCount = tbody.querySelectorAll("tr").length - 1; // Exclude buttonRow
-            let newRow = createRow(rowCount);
-            tbody.insertBefore(newRow, document.getElementById("buttonRow"));
-            saveTableData();
         });
 
         // Update the total sum for each row
@@ -110,8 +94,8 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
 
     // Reset the table to its initial state
     let tbody = document.querySelector("tbody");
-    
-    // Clear all rows and add the initial row along with the "Ny spiller" button row
+
+    // Clear all rows and add only the initial row
     tbody.innerHTML = `
         <tr>
             <th contenteditable="">legg til et navn</th>
@@ -119,37 +103,20 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
             <td contenteditable="">0</td>
             <td class="row-total">0</td>
         </tr>
-        <tr id="buttonRow">
-            <td colspan="4" style="text-align: center;">
-                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
-            </td>
-        </tr>
     `;
-
-    // Reattach the event listener for the "Ny spiller" button
-    document.getElementById("addPlayer").addEventListener("click", function () {
-        let rowCount = tbody.querySelectorAll("tr").length - 1; // Exclude buttonRow
-        let newRow = createRow(rowCount);
-        tbody.insertBefore(newRow, document.getElementById("buttonRow"));
-        saveTableData();
-    });
 
     // Update the total sum for each row
     updateTotalSum();
 });
 
-
 function updateTotalSum() {
     let rows = document.querySelectorAll("tbody tr");
 
-    // Iterate over all rows except the last one (buttonRow)
     rows.forEach(row => {
-        if (row.id !== "buttonRow") {
-            let cells = row.querySelectorAll("td");
-            let throw1 = parseInt(cells[0].textContent.trim()) || 0;
-            let throw2 = parseInt(cells[1].textContent.trim()) || 0;
-            let rowTotal = throw1 + throw2;
-            row.querySelector(".row-total").textContent = rowTotal;
-        }
+        let cells = row.querySelectorAll("td");
+        let throw1 = parseInt(cells[0].textContent.trim()) || 0;
+        let throw2 = parseInt(cells[1].textContent.trim()) || 0;
+        let rowTotal = throw1 + throw2;
+        row.querySelector(".row-total").textContent = rowTotal;
     });
 }
