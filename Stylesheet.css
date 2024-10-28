@@ -75,12 +75,11 @@ body {
 }
 
 #lagre-knapp{
-    padding-top: 20px;
+    padding-top: 20px;  
 }
 
-
 #addPlayer{
-    background-color: #clear;
+    background-color: clear;
     border: none;
     width: 22.5%;
     display: flex;
