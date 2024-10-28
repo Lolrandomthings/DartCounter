@@ -24,7 +24,7 @@ window.onload = function () {
     loadTableData();
     updateTotalSum();
     displayCurrentDate();
-    
+
     // Set up the event listener for the "Ny spiller" button
     document.getElementById("addPlayer").addEventListener("click", function () {
         let tbody = document.querySelector("tbody");
