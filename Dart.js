@@ -34,6 +34,7 @@ window.onload = function () {
         saveTableData(); // Save the updated table data
     });
 
+
 };
 
 function displayCurrentDate() {
@@ -43,19 +44,25 @@ function displayCurrentDate() {
     const formattedDate = today.toLocaleDateString('en-GB', options);
 
     dateContainer.textContent = ` ${formattedDate}`;
-};
+}
 
 function loadTableData() {
     if (localStorage.getItem("dartTableData")) {
         let tableData = JSON.parse(localStorage.getItem("dartTableData"));
         let tbody = document.querySelector("tbody");
 
-        // Clear existing rows without adding the "Ny spiller" button row
-        tbody.innerHTML = '';
+        // Clear existing rows except the button row
+        tbody.innerHTML = `
+        <tr id="buttonRow">
+            <td colspan="4" style="text-align: center;">
+                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
+            </td>
+        </tr>
+        `;
 
         tableData.forEach((rowData, index) => {
             let newRow = createRow(index + 1);
-            tbody.appendChild(newRow);
+            tbody.insertBefore(newRow, document.getElementById("buttonRow"));
 
             let cells = newRow.querySelectorAll("th, td");
             rowData.forEach((cellData, cellIndex) => {
@@ -65,11 +72,18 @@ function loadTableData() {
             });
         });
 
+        // Reattach the event listener for the "Ny spiller" button
+        document.getElementById("addPlayer").addEventListener("click", function () {
+            let rowCount = tbody.querySelectorAll("tr").length - 1; // Exclude buttonRow
+            let newRow = createRow(rowCount);
+            tbody.insertBefore(newRow, document.getElementById("buttonRow"));
+            saveTableData();
+        });
+
         // Update the total sum for each row
         updateTotalSum();
     }
 }
-
 
 function createRow(rowCount) {
     let newRow = document.createElement("tr");
@@ -96,8 +110,8 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
 
     // Reset the table to its initial state
     let tbody = document.querySelector("tbody");
-
-    // Clear all rows and add only the initial row (without the "Ny spiller" button row)
+    
+    // Clear all rows and add the initial row along with the "Ny spiller" button row
     tbody.innerHTML = `
         <tr>
             <th contenteditable="">legg til et navn</th>
@@ -105,12 +119,24 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
             <td contenteditable="">0</td>
             <td class="row-total">0</td>
         </tr>
+        <tr id="buttonRow">
+            <td colspan="4" style="text-align: center;">
+                <button id="addPlayer" class="fhi-btn-secondary">Ny spiller</button>
+            </td>
+        </tr>
     `;
+
+    // Reattach the event listener for the "Ny spiller" button
+    document.getElementById("addPlayer").addEventListener("click", function () {
+        let rowCount = tbody.querySelectorAll("tr").length - 1; // Exclude buttonRow
+        let newRow = createRow(rowCount);
+        tbody.insertBefore(newRow, document.getElementById("buttonRow"));
+        saveTableData();
+    });
 
     // Update the total sum for each row
     updateTotalSum();
 });
-
 
 
 function updateTotalSum() {
