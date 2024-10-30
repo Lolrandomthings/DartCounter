@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darttavle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style/css/styles.min.css"> <!--FHI style pakke-->
     <link rel="stylesheet" href="Stylesheet.css"> <!--Egen style sheet-->
 </head>
@@ -20,7 +21,6 @@
             <a id="linkRegler" href="Regler.html"> Regler</a>
             <a id="linkRegler" href="#"> Admin</a>
         </div>
-
     </div>
 
     <div class="btn-group">
@@ -31,7 +31,6 @@
     <div class="parent-container">
         <div id="currentDate"></div>
     </div>
-
 
     <div class="table-responsive">
         <table class="table">
@@ -50,60 +49,36 @@
                     <td contenteditable="">0</td>
                     <td class="row-total">0</td>
                 </tr>
-
-                <tr id="poenger-rad2">
-                    <th contenteditable="">Legg til et navn</th>
-                    <td contenteditable="">0</td>
-                    <td contenteditable="">0</td>
-                    <td class="row-total">0</td>
-                </tr>
-
-                <tr id="poenger-rad3">
-                    <th contenteditable="">Legg til et navn</th>
-                    <td contenteditable="">0</td>
-                    <td contenteditable="">0</td>
-                    <td class="row-total">0</td>
-                </tr>
-
-                <tr>
-                    <th contenteditable="">Legg til et navn</th>
-                    <td contenteditable="">0</td>
-                    <td contenteditable="">0</td>
-                    <td class="row-total">0</td>
-                </tr>
-
-                <tr>
-                    <th contenteditable="">Legg til et navn</th>
-                    <td contenteditable="">0</td>
-                    <td contenteditable="">0</td>
-                    <td class="row-total">0</td>
-                </tr>
-
+                <!-- Additional rows here -->
             </tbody>
         </table>
-        
     </div>
-    
-    <divcolspa style="text-align: center;"> 
+
+    <div style="text-align: center;">
         <button id="addPlayer" type="button"><i class="icon-plus icon-md"></i>Ny Spiller</button>
     </div>
 
+    <div id="lagre-knapp">
+        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
+    </div>
 
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="downloadCSVButton" class="fhi-btn-primary" onclick="downloadCSV()">Last ned CSV</button>
+    </div>
 
+    <div style="text-align: center; margin-top: 20px;">
+        <input type="file" id="uploadCSV" accept=".csv">
+    </div>
 
-        <div id="lagre-knapp">
-            <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
+    <div id="footer">
+        <p>Utviklet av FHI </p>
+        <div class="linker">
+            <a href="">Om Siden</a>
+            <a href="">Personvern</a>
         </div>
+    </div>
 
-        <div id="footer">
-            <p>Utviklet av FHI </p>
-            <div class="linker">
-                <a href="">Om Siden</a>
-                <a href="">Personvern</a>
-            </div>
-        </div>
-
-        <script src="Dart.js"></script>
+    <script src="Dart.js"></script>
 </body>
 
 </html>

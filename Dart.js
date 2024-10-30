@@ -120,3 +120,93 @@ function updateTotalSum() {
         row.querySelector(".row-total").textContent = rowTotal;
     });
 }
+
+function downloadCSV() {
+    let table = document.querySelector(".table");
+    let rows = table.querySelectorAll("tr");
+    let csvContent = "";
+
+    // Loop through rows to build CSV content
+    rows.forEach(row => {
+        let cols = row.querySelectorAll("th, td");
+        let rowData = [];
+        cols.forEach(col => {
+            rowData.push('"' + col.innerText + '"');
+        });
+        csvContent += rowData.join(",") + "\n";
+    });
+
+    // Create a blob and initiate download
+    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    let url = URL.createObjectURL(blob);
+    let link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "dart_table.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+document.getElementById("uploadCSV").addEventListener("change", function(event) {
+    let file = event.target.files[0];
+    if (file) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let csvContent = e.target.result;
+            parseCSV(csvContent);
+        };
+        reader.readAsText(file);
+    }
+});
+
+function parseCSV(csvContent) {
+    let rows = csvContent.split("\n");
+    let tableBody = document.querySelector("tbody");
+    tableBody.innerHTML = ""; // Clear existing rows
+
+    rows.forEach((row, index) => {
+        if (row.trim() !== "") {
+            let cols = row.split(",");
+            let newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <th contenteditable="">${cols[0].replace(/"/g, '')}</th>
+                <td contenteditable="">${cols[1].replace(/"/g, '')}</td>
+                <td contenteditable="">${cols[2].replace(/"/g, '')}</td>
+                <td class="row-total">${cols[3].replace(/"/g, '')}</td>
+            `;
+            tableBody.appendChild(newRow);
+        }
+    });
+
+    // Update the total sum for each row
+    updateTotalSum();
+}
+
+function downloadXLSX() {
+    let table = document.querySelector(".table");
+    let rows = table.querySelectorAll("tr");
+    let data = [];
+
+    // Loop through rows to build data array
+    rows.forEach(row => {
+        let cols = row.querySelectorAll("th, td");
+        let rowData = [];
+        cols.forEach(col => {
+            rowData.push(col.innerText);
+        });
+        data.push(rowData);
+    });
+
+    // Create a new workbook and worksheet
+    let wb = XLSX.utils.book_new();
+    let ws = XLSX.utils.aoa_to_sheet(data);
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Dart Table");
+
+    // Generate XLSX file and trigger download
+    XLSX.writeFile(wb, "dart_table.xlsx");
+}
+
+document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);
