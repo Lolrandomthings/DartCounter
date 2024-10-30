@@ -1,20 +1,42 @@
 function saveTableData() {
-    let tableData = [];
     let rows = document.querySelectorAll("tbody tr");
-
     rows.forEach(row => {
         if (row.id !== "totalRow") {
-            let rowData = [];
-            let cells = row.querySelectorAll("th, td");
-            cells.forEach(cell => {
-                rowData.push(cell.textContent.trim());
-            });
-            tableData.push(rowData);
+            const playerName = row.querySelector("th").textContent.trim();
+            const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
+            const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
+
+            // Prepare data to send to the server
+            const data = {
+                navn: playerName,
+                kast1: kast1,
+                kast2: kast2
+            };
+
+            // Send data to Flask backend via POST request
+            fetch('/api/dartboard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result); // Confirm entry was added
+            })
+            .catch(error => console.error('Error:', error));
         }
     });
 
-    localStorage.setItem("dartTableData", JSON.stringify(tableData));
+    alert("Dataene er lagret i databasen");
 }
+
+document.getElementById("lagreButton").addEventListener("click", function () {
+    saveTableData();
+    updateTotalSum();
+});
+
 
 window.onload = function () {
     loadTableData();
@@ -224,3 +246,10 @@ function downloadXLSX() {
 }
 
 document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);
+
+// Fetch all entries from the database
+fetch('/api/dartboard')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);  // Display the entries or render them in your UI
+  });
