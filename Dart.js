@@ -1,10 +1,8 @@
 function saveTableData() {
-    // Samle data fra tabellen
     let tableData = [];
     let rows = document.querySelectorAll("tbody tr");
 
     rows.forEach(row => {
-        // Exclude the row containing the "Ny spiller" button
         if (row.id !== "totalRow") {
             let rowData = [];
             let cells = row.querySelectorAll("th, td");
@@ -15,23 +13,20 @@ function saveTableData() {
         }
     });
 
-    // Lagrer data fra tabellen inn i localstorage
-    localStorage.setItem("dartTableData", JSON.stringify(tableData)); // lagrer data som en JSON string
+    localStorage.setItem("dartTableData", JSON.stringify(tableData));
 }
 
-// Laster de lagrede dataene
 window.onload = function () {
     loadTableData();
     updateTotalSum();
     displayCurrentDate();
 
-    // Set up the event listener for the "Ny spiller" button
     document.getElementById("addPlayer").addEventListener("click", function () {
         let tbody = document.querySelector("tbody");
         let rowCount = tbody.querySelectorAll("tr").length;
         let newRow = createRow(rowCount + 1);
-        tbody.appendChild(newRow); // Add the new row to the end of the table body
-        saveTableData(); // Save the updated table data
+        tbody.appendChild(newRow);
+        saveTableData();
     });
 };
 
@@ -49,7 +44,6 @@ function loadTableData() {
         let tableData = JSON.parse(localStorage.getItem("dartTableData"));
         let tbody = document.querySelector("tbody");
 
-        // Clear existing rows
         tbody.innerHTML = '';
 
         tableData.forEach((rowData, index) => {
@@ -64,7 +58,6 @@ function loadTableData() {
             });
         });
 
-        // Update the total sum for each row
         updateTotalSum();
     }
 }
@@ -80,22 +73,17 @@ function createRow(rowCount) {
     return newRow;
 }
 
-// Event listener for "Lagre"-knappen that calls the saveTableData function
 document.getElementById("lagreButton").addEventListener("click", function () {
     saveTableData();
     updateTotalSum();
     alert("Dataene er lagret");
 });
 
-// Event listener for the "Ny Tavle" button to reset the table
 document.getElementById("nyTavleButton").addEventListener("click", function () {
-    // Save the current state of the table before clearing it
     saveTableData();
 
-    // Reset the table to its initial state
     let tbody = document.querySelector("tbody");
 
-    // Clear all rows and add only the initial row
     tbody.innerHTML = `
         <tr>
             <th contenteditable="">legg til et navn</th>
@@ -105,7 +93,6 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
         </tr>
     `;
 
-    // Update the total sum for each row
     updateTotalSum();
 });
 
@@ -126,7 +113,6 @@ function downloadCSV() {
     let rows = table.querySelectorAll("tr");
     let csvContent = "";
 
-    // Loop through rows to build CSV content
     rows.forEach(row => {
         let cols = row.querySelectorAll("th, td");
         let rowData = [];
@@ -136,7 +122,6 @@ function downloadCSV() {
         csvContent += rowData.join(",") + "\n";
     });
 
-    // Create a blob and initiate download
     let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     let url = URL.createObjectURL(blob);
     let link = document.createElement("a");
@@ -148,22 +133,30 @@ function downloadCSV() {
     document.body.removeChild(link);
 }
 
-document.getElementById("uploadCSV").addEventListener("change", function(event) {
+document.getElementById("uploadFile").addEventListener("change", function(event) {
     let file = event.target.files[0];
     if (file) {
         let reader = new FileReader();
         reader.onload = function(e) {
-            let csvContent = e.target.result;
-            parseCSV(csvContent);
+            let fileContent = e.target.result;
+            if (file.name.endsWith(".csv")) {
+                parseCSV(fileContent);
+            } else if (file.name.endsWith(".xlsx")) {
+                parseXLSX(fileContent);
+            }
         };
-        reader.readAsText(file);
+        if (file.name.endsWith(".csv")) {
+            reader.readAsText(file);
+        } else if (file.name.endsWith(".xlsx")) {
+            reader.readAsArrayBuffer(file);
+        }
     }
 });
 
 function parseCSV(csvContent) {
     let rows = csvContent.split("\n");
     let tableBody = document.querySelector("tbody");
-    tableBody.innerHTML = ""; // Clear existing rows
+    tableBody.innerHTML = "";
 
     rows.forEach((row, index) => {
         if (row.trim() !== "") {
@@ -179,7 +172,32 @@ function parseCSV(csvContent) {
         }
     });
 
-    // Update the total sum for each row
+    updateTotalSum();
+}
+
+function parseXLSX(arrayBuffer) {
+    let data = new Uint8Array(arrayBuffer);
+    let workbook = XLSX.read(data, { type: "array" });
+    let firstSheetName = workbook.SheetNames[0];
+    let worksheet = workbook.Sheets[firstSheetName];
+    let json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+    let tableBody = document.querySelector("tbody");
+    tableBody.innerHTML = "";
+
+    json.forEach((row, index) => {
+        if (row.length > 0) {
+            let newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <th contenteditable="">${row[0] || ''}</th>
+                <td contenteditable="">${row[1] || 0}</td>
+                <td contenteditable="">${row[2] || 0}</td>
+                <td class="row-total">${row[3] || 0}</td>
+            `;
+            tableBody.appendChild(newRow);
+        }
+    });
+
     updateTotalSum();
 }
 
@@ -188,7 +206,6 @@ function downloadXLSX() {
     let rows = table.querySelectorAll("tr");
     let data = [];
 
-    // Loop through rows to build data array
     rows.forEach(row => {
         let cols = row.querySelectorAll("th, td");
         let rowData = [];
@@ -198,14 +215,11 @@ function downloadXLSX() {
         data.push(rowData);
     });
 
-    // Create a new workbook and worksheet
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.aoa_to_sheet(data);
 
-    // Append the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, "Dart Table");
 
-    // Generate XLSX file and trigger download
     XLSX.writeFile(wb, "dart_table.xlsx");
 }
 
