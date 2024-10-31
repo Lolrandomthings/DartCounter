@@ -6,7 +6,7 @@ app = Flask(__name__)
 currentTableName = "darttabell"  # Default table at startup
 
 def get_db_connection():
-    db_path = 'C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db'
+    db_path = 'C:/Users/laura/DartCounter/dart.db' #C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db
     conn = sqlite3.connect(db_path, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
@@ -50,16 +50,24 @@ def add_dartboard_entry():
 
     return jsonify({'status': 'Entry added successfully'}), 201
 
-
 # Route to serve the main HTML page
 @app.route('/')
 def index_page():
     return render_template('Index.html')
 
-# Route to serve the main HTML page
 @app.route('/poengtavle')
 def poeng_page():
-    return render_template('Poengtavle.html')  
+    global currentTableName
+    conn = get_db_connection()
+    entries = conn.execute(f'SELECT * FROM {currentTableName} ORDER BY date_played DESC').fetchall()
+    conn.close()
+    
+    # Print entries to see if data is being retrieved
+    print(entries)
+    
+    results = [dict(row) for row in entries]
+    return render_template('Poengtavle.html', entries=results)
+
 
 # Route to serve the main HTML page
 @app.route('/Regler')

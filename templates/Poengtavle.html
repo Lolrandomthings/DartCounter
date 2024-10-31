@@ -24,7 +24,7 @@
     </div>
 
     <div class="btn-group">
-        <button type="button" class="btn fhi-btn-primary" onclick="location.href='Poengtavle.html'">Poengtavle</button>
+        <button type="button" class="btn fhi-btn-primary" onclick="location.href='/poengtavle'">Poengtavle</button>
         <button type="button" class="btn fhi-btn-primary" id="nyTavleButton">Ny runde</button>
     </div>
 
@@ -43,13 +43,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr id="poenger-rad1">
-                    <th contenteditable="">Legg til et navn</th>
-                    <td contenteditable="">0</td>
-                    <td contenteditable="">0</td>
-                    <td class="row-total">0</td>
+                {% for entry in entries %}
+                <tr>
+                    <th>{{ entry['navn'] }}</th>
+                    <td>{{ entry['kast1'] }}</td>
+                    <td>{{ entry['kast2'] }}</td>
+                    <td class="row-total">{{ entry['total_sum'] }}</td>
                 </tr>
-                <!-- Additional rows here -->
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -63,7 +64,7 @@
     </div>
 
     <div>
-        <button id="downloadCSVButton" class="fhi-btn-primary" onclick="downloadCSV()">Last ned CSV</button>
+        <button id="downloadCSVButton" class="fhi-btn-primary" onclick="downloadCSV()">Last ned XL sheet</button>
     </div>
 
     <div>
