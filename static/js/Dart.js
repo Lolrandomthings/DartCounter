@@ -1,5 +1,7 @@
+// Function to save table data
 function saveTableData() {
     let rows = document.querySelectorAll("tbody tr");
+    
     rows.forEach(row => {
         if (row.id !== "totalRow") {
             const playerName = row.querySelector("th").textContent.trim();
@@ -29,28 +31,43 @@ function saveTableData() {
         }
     });
 
-    alert("Dataene er lagret i databasen");
+    console.log("Data er lagret");
 }
 
-document.getElementById("lagreButton").addEventListener("click", function () {
-    saveTableData();
-    updateTotalSum();
-});
-
-
+// Single Event Listener Setup
 window.onload = function () {
     loadTableData();
     updateTotalSum();
     displayCurrentDate();
 
-    document.getElementById("addPlayer").addEventListener("click", function () {
-        let tbody = document.querySelector("tbody");
-        let rowCount = tbody.querySelectorAll("tr").length;
-        let newRow = createRow(rowCount + 1);
-        tbody.appendChild(newRow);
-        saveTableData();
-    });
+    const saveButton = document.getElementById("lagreButton");
+    const addPlayerButton = document.getElementById("addPlayer");
+
+    // Attach event listener for "lagreButton" only once
+    if (saveButton) {
+        saveButton.addEventListener("click", function () {
+            saveTableData();
+            updateTotalSum();
+            alert("Dataene er lagret");
+        });
+    } else {
+        console.error("Save button (lagreButton) not found on the page.");
+    }
+
+    // Attach event listener for "addPlayer" only once
+    if (addPlayerButton) {
+        addPlayerButton.addEventListener("click", function () {
+            let tbody = document.querySelector("tbody");
+            let rowCount = tbody.querySelectorAll("tr").length;
+            let newRow = createRow(rowCount + 1);
+            tbody.appendChild(newRow);
+            saveTableData();
+        });
+    } else {
+        console.error("Add Player button (addPlayer) not found on the page.");
+    }
 };
+
 
 function displayCurrentDate() {
     const dateContainer = document.getElementById("currentDate");
@@ -341,4 +358,18 @@ function downloadXLSX() {
     XLSX.writeFile(wb, "dart_table.xlsx");
 }
 
+<<<<<<< HEAD
 document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);
+=======
+document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);
+
+// Fetch all entries from the database
+fetch('http://127.0.0.1:5000/api/dartboard', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+})
+
+>>>>>>> 09a73485a149b6a8a4e2c1ca8668cf8d029220c1
