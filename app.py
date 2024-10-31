@@ -1,33 +1,52 @@
 from flask import Flask, request, jsonify, render_template
 import sqlite3
+import time
 
 app = Flask(__name__)
+currentTableName = "darttabell"  # Default table at startup
 
 def get_db_connection():
-    db_path = 'C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db' 
-    print(f"Using database at: {db_path}")  # This will print the path in the console for verification
+    db_path = 'C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db'
     conn = sqlite3.connect(db_path, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
+@app.route('/api/create_new_round', methods=['POST'])
+def create_new_round():
+    global currentTableName
+    # Generate a unique table name for the new round
+    currentTableName = f"darttabell_round_{int(time.time())}"  # Unique round table name
+    
+    conn = get_db_connection()
+    try:
+        # Create the new round-specific table by duplicating the structure of `darttabell`
+        conn.execute(f'''
+            CREATE TABLE {currentTableName} AS SELECT * FROM darttabell WHERE 1=0
+        ''')
+        conn.commit()
+    except sqlite3.Error as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
 
-# Route to add a new entry
+    return jsonify({"table_name": currentTableName}), 201
+
+# Route to add entries to the currently active table
 @app.route('/api/dartboard', methods=['POST'])
 def add_dartboard_entry():
+    global currentTableName  # Ensure we're using the current table name
     new_entry = request.get_json()
     player_name = new_entry['navn']
     kast1 = new_entry['kast1']
     kast2 = new_entry['kast2']
     
     conn = get_db_connection()
-    try:
-        conn.execute(
-            'INSERT INTO darttabell (navn, kast1, kast2) VALUES (?, ?, ?)',
-            (player_name, kast1, kast2)
-        )
-        conn.commit()
-    finally:
-        conn.close()  # Ensure connection is closed even if there's an error
+    insert_sql = f'''
+    INSERT INTO {currentTableName} (navn, kast1, kast2) VALUES (?, ?, ?)
+    '''
+    conn.execute(insert_sql, (player_name, kast1, kast2))
+    conn.commit()
+    conn.close()
 
     return jsonify({'status': 'Entry added successfully'}), 201
 
@@ -38,7 +57,7 @@ def index_page():
     return render_template('Index.html')
 
 # Route to serve the main HTML page
-@app.route('/poentavle')
+@app.route('/poengtavle')
 def poeng_page():
     return render_template('Poengtavle.html')  
 

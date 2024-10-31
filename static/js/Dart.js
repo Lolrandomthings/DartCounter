@@ -1,4 +1,4 @@
-// Function to save table data
+// Function to save table data 
 function saveTableData() {
     let rows = document.querySelectorAll("tbody tr");
     
@@ -8,14 +8,13 @@ function saveTableData() {
             const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
             const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
 
-            // Prepare data to send to the server
             const data = {
                 navn: playerName,
                 kast1: kast1,
                 kast2: kast2
             };
 
-            // Send data to Flask backend via POST request
+            // Send data to the fixed endpoint without specifying the table name
             fetch('/api/dartboard', {
                 method: 'POST',
                 headers: {
@@ -34,6 +33,34 @@ function saveTableData() {
     console.log("Data er lagret");
 }
 
+// "Ny Runde" button click handler (no need to track the table in JavaScript)
+document.getElementById("nyTavleButton").addEventListener("click", function () {
+    fetch('/api/create_new_round', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("New round table created:", data.table_name);
+
+        // Clear the current board in the frontend
+        let tbody = document.querySelector("tbody");
+        tbody.innerHTML = `
+            <tr>
+                <th contenteditable="">legg til et navn</th>
+                <td contenteditable="">0</td>
+                <td contenteditable="">0</td>
+                <td class="row-total">0</td>
+            </tr>
+        `;
+        updateTotalSum();
+    })
+    .catch(error => console.error('Error creating new round:', error));
+});
+
+
 // Single Event Listener Setup
 window.onload = function () {
     loadTableData();
@@ -51,15 +78,14 @@ window.onload = function () {
             alert("Dataene er lagret");
         });
     } else {
-        console.error("Save button (lagreButton) not found on the page.");
+        console.error("lagreButton not found on the page.");
     }
 
     // Attach event listener for "addPlayer" only once
     if (addPlayerButton) {
         addPlayerButton.addEventListener("click", function () {
             let tbody = document.querySelector("tbody");
-            let rowCount = tbody.querySelectorAll("tr").length;
-            let newRow = createRow(rowCount + 1);
+            let newRow = createRow();
             tbody.appendChild(newRow);
             saveTableData();
         });
@@ -84,8 +110,8 @@ function loadTableData() {
 
         tbody.innerHTML = '';
 
-        tableData.forEach((rowData, index) => {
-            let newRow = createRow(index + 1);
+        tableData.forEach(rowData => {
+            let newRow = createRow();
             tbody.appendChild(newRow);
 
             let cells = newRow.querySelectorAll("th, td");
@@ -100,10 +126,10 @@ function loadTableData() {
     }
 }
 
-function createRow(rowCount) {
+function createRow() {
     let newRow = document.createElement("tr");
     newRow.innerHTML = `
-        <th contenteditable="">Rad ${rowCount}</th>
+        <th contenteditable="">Legg til et navn</th>
         <td contenteditable="">0</td>
         <td contenteditable="">0</td>
         <td class="row-total">0</td>
@@ -123,7 +149,8 @@ function updateTotalSum() {
     });
 }
 
-function downloadCSV() {
+
+/*function downloadCSV() {
     let table = document.querySelector(".table");
     let rows = table.querySelectorAll("tr");
     let csvContent = "";
@@ -228,6 +255,6 @@ function downloadXLSX() {
     XLSX.utils.book_append_sheet(wb, ws, "Dart Table");
 
     XLSX.writeFile(wb, "dart_table.xlsx");
-}
+}*/
 
 document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);
