@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS darttabell (
     UNIQUE(navn, kast1, kast2, date_played)  -- Unique constraint
 );
 
-CREATE TABLE nyrunde_tabbell AS SELECT * FROM darttabell WHERE 1=0;
+/*CREATE TABLE nyrunde_tabbell AS SELECT * FROM darttabell WHERE 1=0;*/
 
 
 -- Sample insert (ensure no duplicates with unique constraint)
@@ -28,6 +28,9 @@ WHERE rowid NOT IN (
     FROM darttabell
     GROUP BY navn, kast1, kast2, date_played
 );
+
+DELETE FROM 'darttabell';
+DELETE FROM 'sqlite_sequence' WHERE name = 'darttabell';
 
 
 

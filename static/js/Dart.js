@@ -1,9 +1,10 @@
-// Function to save table data 
+// Function to save only unsaved table data
 function saveTableData() {
     let rows = document.querySelectorAll("tbody tr");
-    
+
     rows.forEach(row => {
-        if (row.id !== "totalRow") {
+        // Check if the row has been saved before
+        if (!row.hasAttribute("data-saved")) {
             const playerName = row.querySelector("th").textContent.trim();
             const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
             const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
@@ -14,7 +15,7 @@ function saveTableData() {
                 kast2: kast2
             };
 
-            // Send data to the fixed endpoint without specifying the table name
+            // Send data to the endpoint
             fetch('/api/dartboard', {
                 method: 'POST',
                 headers: {
@@ -25,6 +26,9 @@ function saveTableData() {
             .then(response => response.json())
             .then(result => {
                 console.log(result); // Confirm entry was added
+
+                // Mark this row as saved
+                row.setAttribute("data-saved", "true");
             })
             .catch(error => console.error('Error:', error));
         }
@@ -32,6 +36,34 @@ function saveTableData() {
 
     console.log("Data er lagret");
 }
+
+// "Ny Runde" button click handler
+document.getElementById("nyTavleButton").addEventListener("click", function () {
+    fetch('/api/create_new_round', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("New round table created:", data.table_name);
+
+        // Clear the current board in the frontend
+        let tbody = document.querySelector("tbody");
+        tbody.innerHTML = `
+            <tr>
+                <th contenteditable="">legg til et navn</th>
+                <td contenteditable="">0</td>
+                <td contenteditable="">0</td>
+                <td class="row-total">0</td>
+            </tr>
+        `;
+        updateTotalSum();
+    })
+    .catch(error => console.error('Error creating new round:', error));
+});
+
 
 // "Ny Runde" button click handler (no need to track the table in JavaScript)
 document.getElementById("nyTavleButton").addEventListener("click", function () {
@@ -145,6 +177,7 @@ function updateTotalSum() {
         let throw1 = parseInt(cells[0].textContent.trim()) || 0;
         let throw2 = parseInt(cells[1].textContent.trim()) || 0;
         let rowTotal = throw1 + throw2;
+
         row.querySelector(".row-total").textContent = rowTotal;
     });
 }

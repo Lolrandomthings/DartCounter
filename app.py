@@ -6,7 +6,7 @@ app = Flask(__name__)
 currentTableName = "darttabell"  # Default table at startup
 
 def get_db_connection():
-    db_path = 'C:/Users/laura/DartCounter/dart.db' #C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db
+    db_path = 'C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db'
     conn = sqlite3.connect(db_path, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
