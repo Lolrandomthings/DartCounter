@@ -2,37 +2,27 @@ function saveTableData() {
     let rows = document.querySelectorAll("tbody tr");
 
     rows.forEach(row => {
-        // Check if the row has been saved before
         if (!row.hasAttribute("data-saved")) {
             const playerName = row.querySelector("th").textContent.trim();
             const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
             const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
-
-            // Skip if the row has no player name or both scores are zero
-            if (!playerName || (kast1 === 0 && kast2 === 0)) {
-                console.log("Skipping row with no data.");
-                return;
-            }
+            const totalSum = kast1 + kast2 + 2; // Include +2 bonus here for saving
 
             const data = {
                 navn: playerName,
                 kast1: kast1,
-                kast2: kast2
+                kast2: kast2,
+                total_sum: totalSum // Send the bonus-inclusive total to the server
             };
 
-            // Send data to the endpoint
             fetch('/api/dartboard', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
                 .then(response => response.json())
                 .then(result => {
-                    console.log(result); // Confirm entry was added
-
-                    // Mark this row as saved
+                    console.log(result);
                     row.setAttribute("data-saved", "true");
                 })
                 .catch(error => console.error('Error:', error));
@@ -41,6 +31,7 @@ function saveTableData() {
 
     console.log("Data er lagret");
 }
+
 
 
 document.getElementById("nyTavleButton").addEventListener("click", function () {
@@ -160,36 +151,16 @@ function updateTotalSum() {
         let cells = row.querySelectorAll("td");
         let throw1 = parseInt(cells[0].textContent.trim()) || 0;
         let throw2 = parseInt(cells[1].textContent.trim()) || 0;
-        let rowTotal = throw1 + throw2;
+        let rowTotal = throw1 + throw2 + 2; // Automatically add +2 bonus
 
         console.log(`Player row: ${row.querySelector("th").textContent.trim()}`);
-        console.log(`Throw 1: ${throw1}, Throw 2: ${throw2}, Initial Total: ${rowTotal}`);
+        console.log(`Throw 1: ${throw1}, Throw 2: ${throw2}, Total with Bonus: ${rowTotal}`);
 
-        // Check if either throw has a score of 2 and both throws are non-zero
-        if (throw1 !== 2 && throw2 !== 2 && (throw1 > 0 || throw2 > 0)) {
-            // Apply bonus only if it hasn’t been applied before
-            if (!row.hasAttribute("data-bonus-applied")) {
-                rowTotal += 2; // Add the +2 bonus
-                row.setAttribute("data-bonus-applied", "true"); // Mark the bonus as applied
-                console.log(`Bonus applied. New Total: ${rowTotal}`);
-            } else {
-                console.log("Bonus already applied previously.");
-            }
-        } else {
-            // Remove the bonus if it was previously applied and there's a 2 in either throw
-            if (row.hasAttribute("data-bonus-applied")) {
-                row.removeAttribute("data-bonus-applied");
-                console.log("Bonus removed because a throw has a score of 2.");
-            } else {
-                console.log("No bonus applied, and a throw has a score of 2 or zero.");
-            }
-        }
-
-        // Update the total in the row
+        // Update the total in the row for display
         row.querySelector(".row-total").textContent = rowTotal;
-        console.log(`Final Total for row: ${rowTotal}`);
     });
 }
+
 
 
 function downloadCSV() {
