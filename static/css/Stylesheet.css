@@ -232,3 +232,17 @@ body {
     justify-content: flex-start;
     text-align: center;
 }
+
+/* Placeholder styling for empty contenteditable cells */
+.editable:empty::before {
+    content: attr(data-placeholder);
+    color: #393c61;
+    pointer-events: none; /* Prevents the placeholder text from being selectable */
+}
+
+/* Remove placeholder text on focus */
+.editable:focus::before {
+    content: '';
+}
+
+

@@ -23,74 +23,52 @@ function saveTableData() {
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(result => {
-                console.log(result); // Confirm entry was added
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result); // Confirm entry was added
 
-                // Mark this row as saved
-                row.setAttribute("data-saved", "true");
-            })
-            .catch(error => console.error('Error:', error));
+                    // Mark this row as saved
+                    row.setAttribute("data-saved", "true");
+                })
+                .catch(error => console.error('Error:', error));
         }
     });
 
     console.log("Data er lagret");
 }
 
-// "Ny Runde" button click handler
 document.getElementById("nyTavleButton").addEventListener("click", function () {
+    const button = this;
+    button.disabled = true; // Disable button to prevent multiple clicks
+
     fetch('/api/create_new_round', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log("New round table created:", data.table_name);
+        .then(response => response.json())
+        .then(data => {
+            console.log("New round table created:", data.table_name);
 
-        // Clear the current board in the frontend
-        let tbody = document.querySelector("tbody");
-        tbody.innerHTML = `
-            <tr>
-                <th contenteditable="">legg til et navn</th>
-                <td contenteditable="">0</td>
-                <td contenteditable="">0</td>
-                <td class="row-total">0</td>
-            </tr>
+            // Reset the board in the frontend
+            let tbody = document.querySelector("tbody");
+            tbody.innerHTML = `
+                <tr id="poenger-rad1">
+                    <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
+                    <td contenteditable="" class="editable"data-placeholder="0"></td>
+                    <td contenteditable="" class="editable" data-placeholder="0"></td>
+                    <td class="row-total">0</td>
+                </tr>
         `;
-        updateTotalSum();
-    })
-    .catch(error => console.error('Error creating new round:', error));
+            updateTotalSum();
+        })
+        .catch(error => console.error('Error creating new round:', error))
+        .finally(() => {
+            setTimeout(() => { button.disabled = false; }, 2000); // Re-enable after 2 seconds
+        });
 });
 
-
-// "Ny Runde" button click handler (no need to track the table in JavaScript)
-document.getElementById("nyTavleButton").addEventListener("click", function () {
-    fetch('/api/create_new_round', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("New round table created:", data.table_name);
-
-        // Clear the current board in the frontend
-        let tbody = document.querySelector("tbody");
-        tbody.innerHTML = `
-            <tr>
-                <th contenteditable="">legg til et navn</th>
-                <td contenteditable="">0</td>
-                <td contenteditable="">0</td>
-                <td class="row-total">0</td>
-            </tr>
-        `;
-        updateTotalSum();
-    })
-    .catch(error => console.error('Error creating new round:', error));
-});
 
 
 // Single Event Listener Setup
@@ -161,9 +139,10 @@ function loadTableData() {
 function createRow() {
     let newRow = document.createElement("tr");
     newRow.innerHTML = `
-        <th contenteditable="">Legg til et navn</th>
-        <td contenteditable="">0</td>
-        <td contenteditable="">0</td>
+
+        <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
+        <td contenteditable="" class="editable"data-placeholder="0"></td>
+        <td contenteditable="" class="editable" data-placeholder="0"></td>
         <td class="row-total">0</td>
     `;
     return newRow;
@@ -178,12 +157,37 @@ function updateTotalSum() {
         let throw2 = parseInt(cells[1].textContent.trim()) || 0;
         let rowTotal = throw1 + throw2;
 
+        console.log(`Player row: ${row.querySelector("th").textContent.trim()}`);
+        console.log(`Throw 1: ${throw1}, Throw 2: ${throw2}, Initial Total: ${rowTotal}`);
+
+        // Check if either throw has a score of 2 and both throws are non-zero
+        if (throw1 !== 2 && throw2 !== 2 && (throw1 > 0 || throw2 > 0)) {
+            // Apply bonus only if it hasn’t been applied before
+            if (!row.hasAttribute("data-bonus-applied")) {
+                rowTotal += 2; // Add the +2 bonus
+                row.setAttribute("data-bonus-applied", "true"); // Mark the bonus as applied
+                console.log(`Bonus applied. New Total: ${rowTotal}`);
+            } else {
+                console.log("Bonus already applied previously.");
+            }
+        } else {
+            // Remove the bonus if it was previously applied and there's a 2 in either throw
+            if (row.hasAttribute("data-bonus-applied")) {
+                row.removeAttribute("data-bonus-applied");
+                console.log("Bonus removed because a throw has a score of 2.");
+            } else {
+                console.log("No bonus applied, and a throw has a score of 2 or zero.");
+            }
+        }
+
+        // Update the total in the row
         row.querySelector(".row-total").textContent = rowTotal;
+        console.log(`Final Total for row: ${rowTotal}`);
     });
 }
 
 
-/*function downloadCSV() {
+function downloadCSV() {
     let table = document.querySelector(".table");
     let rows = table.querySelectorAll("tr");
     let csvContent = "";
@@ -288,6 +292,6 @@ function downloadXLSX() {
     XLSX.utils.book_append_sheet(wb, ws, "Dart Table");
 
     XLSX.writeFile(wb, "dart_table.xlsx");
-}*/
+}
 
 document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);

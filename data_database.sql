@@ -1,3 +1,16 @@
+-- Create the metadata table to store current and last table names
+CREATE TABLE IF NOT EXISTS metadata (
+    id INTEGER PRIMARY KEY,
+    current_table TEXT,
+    last_table TEXT
+);
+
+-- Initialize metadata with the most recent table or default to darttabell
+INSERT OR IGNORE INTO metadata (id, current_table, last_table)
+VALUES (1, 
+        (SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'darttabell_round_%' ORDER BY name DESC LIMIT 1),
+        NULL);
+
 -- Create the darttabell table with a unique constraint to prevent exact duplicates
 CREATE TABLE IF NOT EXISTS darttabell (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,6 +41,8 @@ WHERE rowid NOT IN (
     FROM darttabell
     GROUP BY navn, kast1, kast2, date_played
 );
+
+SELECT * FROM metadata WHERE id = 1;
 
 DELETE FROM 'darttabell';
 DELETE FROM 'sqlite_sequence' WHERE name = 'darttabell';
