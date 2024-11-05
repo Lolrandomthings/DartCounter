@@ -9,22 +9,26 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
-    padding: 1%;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 0 50px; /* Optional: Add padding for spacing */
 }
 
 .tittel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1;
+    text-align: center;
+    flex-grow: 1; /* This allows .tittel to take up available space in the center */
+    padding-left: 140px;
+    font-size: 30px;
 }
 
 .links {
     display: flex;
     gap: 30px;
-    position: relative;
-    right: 20px;
-    top: 50%;
 }
 
 a:link {
@@ -32,15 +36,11 @@ a:link {
     text-decoration: none;
 }
 
-h1 {
+h1, h2 {
     font-size: 30px;
     margin: 0;
 }
 
-h2 {
-    font-size: 30px;
-    margin: 0;
-}
 
 body {
     background-color: #f0f0f0;
@@ -79,7 +79,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 170px;
+    width: 250px;
     height: 50px;
     color: white;
     text-align: center;
@@ -88,23 +88,26 @@ body {
 }
 
 #lagre-knapp{
-    padding-top: 20px;
+    padding-top: 50px;
 }
 
-#addPlayer{
-    background-color: clear;
+#addPlayer {
+    background-color: transparent;
     border: none;
     width: 22.5%;
     display: flex;
     justify-content: left;
     margin-bottom: 40px;
-    margin-left: 38.7%;
-    margin-top: -16px;
+    margin-top: -10px;
+    margin-left: 200px;
+    transition: transform 0.2s ease;
+    transform-origin: center; /* Center the scaling effect */
 }
 
 #addPlayer:hover {
-    background-color: white;
+    transform: scale(1.05);
 }
+
 
 #footer {
     color: white;
@@ -114,14 +117,16 @@ body {
     padding: 10px;
     position: relative;
     margin-top: 12%;
+    display: flex;
+    justify-content: center;
 }
 
-.linker {
-    display: flex;
-    margin-left: 1050px;
-    margin-top: 1%;
-    gap: 20px;
+.footer-text {
+    padding-top: 30px;
+    font-weight: 900;
+    font-size: 20px;
 }
+
 
 .btn-group {
     display: flex;
@@ -136,17 +141,21 @@ body {
 .parent-container {
     display: flex;
     justify-content: center;
-    padding-right: 20%;
+    align-items: center;
+    margin-bottom: 40px;
+    margin-top: 40px;
 }
 
 #currentDate {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     border-bottom: 2px solid #393c61;
     margin-bottom: 40px;
     margin-top: 20px;
     font-size: 18px;
+
 }
+
 
 @media (max-width: 768px) {
     .table-responsive {
@@ -174,38 +183,30 @@ body {
     }
 }
 
-#velgFilButton{
+.results-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px; /* Adjust for a rounded button if desired */
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-20%, 10%);
-    width: 250px;
-    height: 50px;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    margin-top: 1%;
+    flex-direction: column;
+    align-items: center; /* Center the buttons */
+    margin-top: 20px; /* Space between the table and buttons */
 }
 
-#downloadCSVButton{
+.button-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    border-radius: 4px; /* Adjust for a rounded button if desired */
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 10%);
-    width: 100px;
-    height: 50px;
+    gap: 20px; /* Space between the two buttons */
+    margin-top: 50px; /* Space between "Lagre resultater" and the buttons */
+    margin-left: 40px;
+}
+
+#velgFilButton, #downloadCSVButton {
+    border-radius: 4px;
+    width: 150px; /* Adjust width as desired */
+    height: 30px;
     text-align: center;
     border: none;
     cursor: pointer;
 }
+
 
 /*style regler.html */
 

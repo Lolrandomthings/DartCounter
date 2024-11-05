@@ -13,14 +13,17 @@
 <body>
 
     <div id="header">
-        <div class="tittel">
-            <h1>Reiduns </h1>
-            <h2>Darttavle</h2>
+
+        <div class="container">
+            <div class="tittel">
+                <h1>Reiduns Darttavle</h1>
+            </div>
+            <div class="links">
+                <a id="linkRegler" href="../templates/Regler.html"> Regler</a>
+                <a id="linkRegler" href="#"> Admin</a>
+            </div>
         </div>
-        <div class="links">
-            <a id="linkRegler" href="../templates/Regler.html"> Regler</a>
-            <a id="linkRegler" href="#"> Admin</a>
-        </div>
+
     </div>
 
     <div class="btn-group">
@@ -59,24 +62,32 @@
         <button id="addPlayer" type="button"><i class="icon-plus icon-md"></i>Ny Spiller</button>
     </div>
 
-    <div id="lagre-knapp">
-        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
-    </div>
+    <div class="results-container">
 
-    <div>
-        <button id="downloadCSVButton" class="fhi-btn-primary" onclick="downloadCSV()">Last ned XL sheet</button>
-    </div>
+        <div id="lagre-knapp">
+            <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
+        </div>
 
-    <div>
-        <input id="velgFilButton" type="file" id="uploadCSV" accept=".csv, xlsx">
+        <div class="button-container">
+
+
+            <div>
+                <button id="downloadCSVButton" class="fhi-btn-primary" onclick="downloadCSV()">Last ned XL
+                    sheet</button>
+            </div>
+
+            <div>
+                <input id="velgFilButton" type="file" id="uploadCSV" accept=".csv, xlsx">
+            </div>
+
+        </div>
+
     </div>
 
     <div id="footer">
-        <p>Utviklet av FHI </p>
-        <div class="linker">
-            <a href="">Om Siden</a>
-            <a href="">Personvern</a>
-        </div>
+
+        <p class="footer-text">Utviklet av FHI </p>
+
     </div>
 
     <script src="../static/js/Dart.js"></script>

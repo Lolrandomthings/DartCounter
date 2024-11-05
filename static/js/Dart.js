@@ -1,4 +1,3 @@
-// Function to save only unsaved table data
 function saveTableData() {
     let rows = document.querySelectorAll("tbody tr");
 
@@ -8,6 +7,12 @@ function saveTableData() {
             const playerName = row.querySelector("th").textContent.trim();
             const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
             const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
+
+            // Skip if the row has no player name or both scores are zero
+            if (!playerName || (kast1 === 0 && kast2 === 0)) {
+                console.log("Skipping row with no data.");
+                return;
+            }
 
             const data = {
                 navn: playerName,
@@ -36,6 +41,7 @@ function saveTableData() {
 
     console.log("Data er lagret");
 }
+
 
 document.getElementById("nyTavleButton").addEventListener("click", function () {
     const button = this;
@@ -97,18 +103,17 @@ window.onload = function () {
             let tbody = document.querySelector("tbody");
             let newRow = createRow();
             tbody.appendChild(newRow);
-            saveTableData();
+            // Don't call saveTableData() here, wait until the user saves manually
         });
-    } else {
-        console.error("Add Player button (addPlayer) not found on the page.");
     }
+    
 };
 
 function displayCurrentDate() {
     const dateContainer = document.getElementById("currentDate");
     const today = new Date();
     const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = today.toLocaleDateString('en-GB', options);
+    const formattedDate = today.toLocaleDateString('no-NO', options);
 
     dateContainer.textContent = ` ${formattedDate}`;
 }
