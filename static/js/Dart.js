@@ -162,92 +162,69 @@ function updateTotalSum() {
 }
 
 
-
-function downloadCSV() {
-    let table = document.querySelector(".table");
-    let rows = table.querySelectorAll("tr");
-    let csvContent = "";
-
-    rows.forEach(row => {
-        let cols = row.querySelectorAll("th, td");
-        let rowData = [];
-        cols.forEach(col => {
-            rowData.push('"' + col.innerText + '"');
-        });
-        csvContent += rowData.join(",") + "\n";
-    });
-
-    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    let url = URL.createObjectURL(blob);
-    let link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "dart_table.csv");
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
+// Function to handle file upload and parse only .xlsx files
 document.getElementById("uploadCSV").addEventListener("change", function(event) {
     let file = event.target.files[0];
-    if (file) {
+    if (file && file.name.endsWith(".xlsx")) {
         let reader = new FileReader();
         reader.onload = function(e) {
-            let csvContent = e.target.result;
-            parseCSV(csvContent);
+            parseXLSX(e.target.result); // Pass the ArrayBuffer to parseXLSX
         };
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file); // Read as ArrayBuffer for XLSX
+    } else {
+        console.error("Unsupported file type. Please upload an XLSX file.");
     }
 });
 
-function parseCSV(csvContent) {
-    let rows = csvContent.split("\n");
-    let tableBody = document.querySelector("tbody");
-    tableBody.innerHTML = ""; // Clear existing rows
-
-    rows.slice(1).forEach((row, index) => { // Skip the first row
-        if (row.trim() !== "") {
-            let cols = row.split(",");
-            let newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                <th contenteditable="">${cols[0].replace(/"/g, '')}</th>
-                <td contenteditable="">${cols[1].replace(/"/g, '')}</td>
-                <td contenteditable="">${cols[2].replace(/"/g, '')}</td>
-                <td class="row-total">${cols[3].replace(/"/g, '')}</td>
-            `;
-            tableBody.appendChild(newRow);
-        }
-    });
-
-    updateTotalSum();
-}
-
+// Function to parse the uploaded .xlsx file and display it in the table
 function parseXLSX(arrayBuffer) {
-    let data = new Uint8Array(arrayBuffer);
-    let workbook = XLSX.read(data, { type: "array" });
-    let firstSheetName = workbook.SheetNames[0];
-    let worksheet = workbook.Sheets[firstSheetName];
-    let json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+    console.log("parseXLSX function called");
 
-    let tableBody = document.querySelector("tbody");
-    tableBody.innerHTML = "";
+    try {
+        let data = new Uint8Array(arrayBuffer);
+        let workbook = XLSX.read(data, { type: "array" });
+        let firstSheetName = workbook.SheetNames[0];
+        let worksheet = workbook.Sheets[firstSheetName];
+        
+        // Convert worksheet to JSON array
+        let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 0 });
+        console.log("Parsed JSON Data:", jsonData); // Log to inspect the data structure
 
-    json.slice(1).forEach((row, index) => { // Skip the first row
-        if (row.length > 0) {
-            let newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                <th contenteditable="">${row[0] || ''}</th>
-                <td contenteditable="">${row[1] || 0}</th>
-                <td contenteditable="">${row[2] || 0}</th>
-                <td class="row-total">${row[3] || 0}</th>
-            `;
-            tableBody.appendChild(newRow);
+        let tableBody = document.querySelector("tbody");
+        if (!tableBody) {
+            console.error("Table body element not found.");
+            return;
         }
-    });
 
-    updateTotalSum();
+        tableBody.innerHTML = ""; // Clear existing rows
+
+        // Only process rows that have valid data in expected columns
+        jsonData.slice(1).forEach((row) => {
+            if (
+                typeof row[0] === 'string' && row[0].trim() !== '' && // Name is non-empty
+                !isNaN(row[1]) && !isNaN(row[2]) && !isNaN(row[3])    // Scores are numeric
+            ) {
+                let newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <th contenteditable="">${row[0]}</th>
+                    <td contenteditable="">${row[1]}</td>
+                    <td contenteditable="">${row[2]}</td>
+                    <td class="row-total">${row[3]}</td>
+                `;
+                tableBody.appendChild(newRow);
+                console.log(`Row added to table: ${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}`);
+            } else {
+                console.warn("Skipping invalid or empty row:", row);
+            }
+        });
+
+        updateTotalSum(); // Assuming this function recalculates totals
+    } catch (error) {
+        console.error("Error parsing XLSX file:", error);
+    }
 }
 
+// Function to download the table data as an .xlsx file
 function downloadXLSX() {
     let table = document.querySelector(".table");
     let rows = table.querySelectorAll("tr");
@@ -270,4 +247,16 @@ function downloadXLSX() {
     XLSX.writeFile(wb, "dart_table.xlsx");
 }
 
-document.getElementById("downloadCSVButton").addEventListener("click", downloadXLSX);
+// Use DOMContentLoaded to set up event listeners for the buttons
+document.addEventListener("DOMContentLoaded", function() {
+    const downloadButton = document.getElementById("downloadCSVButton");
+
+    if (downloadButton) {
+        downloadButton.addEventListener("click", downloadXLSX);
+    } else {
+        console.error("downloadCSVButton not found in the DOM.");
+    }
+});
+
+
+
