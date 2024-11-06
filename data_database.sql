@@ -14,15 +14,13 @@ VALUES (1,
 -- Create the darttabell table with a unique constraint to prevent exact duplicates
 CREATE TABLE IF NOT EXISTS darttabell (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    navn VARCHAR(64) NOT NULL,
+    navn TEXT NOT NULL,
     kast1 INTEGER NOT NULL,
     kast2 INTEGER NOT NULL,
-    total_sum INTEGER AS (kast1 + kast2) STORED,
+    total_sum INTEGER AS (kast1 + kast2 + 2) STORED, -- Automatically add +2 bonus
     date_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(navn, kast1, kast2, date_played)  -- Unique constraint
+    UNIQUE(navn, kast1, kast2, date_played)
 );
-
-/*CREATE TABLE nyrunde_tabbell AS SELECT * FROM darttabell WHERE 1=0;*/
 
 
 -- Sample insert (ensure no duplicates with unique constraint)
@@ -44,8 +42,8 @@ WHERE rowid NOT IN (
 
 SELECT * FROM metadata WHERE id = 1;
 
-DELETE FROM 'darttabell';
-DELETE FROM 'sqlite_sequence' WHERE name = 'darttabell';
+/*DELETE FROM 'darttabell';
+DELETE FROM 'sqlite_sequence' WHERE name = 'darttabell';*/
 
 
 

@@ -5,10 +5,11 @@ import sqlite3
 app = Flask(__name__)
 
 def get_db_connection():
-    db_path = 'C:/Users/laura/DartCounter/dart.db'
+    db_path = 'C:/Users/Administrator/Documents/Uke43_ReidunDarttavle_praksis/DartCounter/dart.db'
     conn = sqlite3.connect(db_path, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 #Load current and last table names from metadata
 def load_table_names():
@@ -34,27 +35,36 @@ def create_new_round_on_startup():
     # Retrieve last table from metadata
     row = conn.execute('SELECT current_table, last_table FROM metadata WHERE id = 1').fetchone()
     lastTableName = row['last_table'] if row else "darttabell"
-    currentTableName = row['current_table'] if row else f"darttabell_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+    currentTableName = f"darttabell_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
 
-    # Check if currentTableName already exists to avoid re-creation
-    table_exists = conn.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{currentTableName}'").fetchone()
-    if table_exists:
-        print(f"Table {currentTableName} already exists. Skipping creation.")
-        conn.close()
-        return
-
-    print(f"Startup: Creating new table {currentTableName}, last table was {lastTableName}")
-    
-    try:
-        # Create the new table and update metadata
-        conn.execute(f'CREATE TABLE {currentTableName} AS SELECT * FROM darttabell WHERE 1=0')
-        conn.execute('UPDATE metadata SET current_table = ?, last_table = ? WHERE id = 1',
-                     (currentTableName, lastTableName))
-        conn.commit()
-        print(f"Table {currentTableName} created successfully on startup.")
-    except sqlite3.Error as e:
-        print(f"Error creating new table on startup: {str(e)}")
-    finally:
+    # Check if the new table needs to be created
+    if not row or not conn.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{currentTableName}'").fetchone():
+        print(f"Startup: Creating new table {currentTableName}, last table was {lastTableName}")
+        
+        try:
+            # Create the new table with the explicit schema
+            conn.execute(f'''
+                CREATE TABLE {currentTableName} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    navn TEXT NOT NULL,
+                    kast1 INTEGER NOT NULL,
+                    kast2 INTEGER NOT NULL,
+                    total_sum INTEGER AS (kast1 + kast2 + 2) STORED,
+                    date_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(navn, kast1, kast2, date_played)
+                )
+            ''')
+            # Update metadata
+            conn.execute('UPDATE metadata SET current_table = ?, last_table = ? WHERE id = 1',
+                         (currentTableName, lastTableName))
+            conn.commit()
+            print(f"Table {currentTableName} created successfully on startup.")
+        except sqlite3.Error as e:
+            print(f"Error creating new table on startup: {str(e)}")
+        finally:
+            conn.close()
+    else:
+        print(f"Table {currentTableName} already exists or metadata not found. Skipping creation.")
         conn.close()
 
 
@@ -69,8 +79,20 @@ def create_new_round():
 
     conn = get_db_connection()
     try:
-        # Create the new table and update metadata with new current and last table names
-        conn.execute(f'CREATE TABLE {currentTableName} AS SELECT * FROM darttabell WHERE 1=0')
+        # Define the schema explicitly for new tables
+        conn.execute(f'''
+            CREATE TABLE {currentTableName} (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                navn TEXT NOT NULL,
+                kast1 INTEGER NOT NULL,
+                kast2 INTEGER NOT NULL,
+                total_sum INTEGER AS (kast1 + kast2 + 2) STORED, -- Automatically add +2 bonus
+                date_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(navn, kast1, kast2, date_played)
+            )
+        ''')
+        
+        # Update metadata with the new current and last table names
         conn.execute('UPDATE metadata SET current_table = ?, last_table = ? WHERE id = 1',
                      (currentTableName, lastTableName))
         conn.commit()
@@ -82,7 +104,6 @@ def create_new_round():
         conn.close()
 
     return jsonify({"table_name": currentTableName}), 201
-
 
 
 
