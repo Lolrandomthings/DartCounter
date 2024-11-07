@@ -58,34 +58,20 @@
         </table>
     </div>
 
-    <div style="text-align: center;">
-        <button id="addPlayer" type="button"><i class="icon-plus icon-md"></i>Ny Spiller</button>
+    <div class="button-container">
+        <button id="downloadCSVButton" class="fhi-btn">Last ned XL sheet</button>
+
+        <label for="uploadCSV" class="fhi-btn" id="custom-file-upload">
+            <span>Velg fil</span>
+        </label>
+        <input type="file" id="uploadCSV" style="display: none;" />
+
+        <span id="fileStatus" style="display: none;">Ingen fil valgt</span>
     </div>
 
-    <div class="results-container">
-
-        <div id="lagre-knapp">
-            <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
-        </div>
-
-        <div class="button-container">
-
-
-            <div>
-                <button id="downloadCSVButton" class="fhi-btn-primary">Last ned XL sheet</button>
-            </div>
-
-            <div>
-                <input type="file" id="uploadCSV" accept=".csv, .xlsx">
-            </div>
-
-
-    </div>
 
     <div id="footer">
-
         <p class="footer-text">Utviklet av FHI </p>
-
     </div>
 
     <script src="../static/js/Dart.js"></script>

@@ -35,51 +35,69 @@
         <div id="currentDate"></div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <td></td>
-                    <th id="kast1">1. kast</th>
-                    <th id="kast2">2. kast</th>
-                    <th>Totalt poeng</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr id="poenger-rad1"> 
-                    <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
-                    <td contenteditable="" class="editable" data-placeholder="0"></td>
-                    <td contenteditable="" class="editable" data-placeholder="0"></td>
-                    <td class="row-total">0</td>
-                </tr>
-            </tbody>
-        </table>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>1. kast</th>
+                        <th>2. kast</th>
+                        <th>Totalt poeng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="poenger-rad1">
+                        <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
+                        <td contenteditable="" class="editable" data-placeholder="0"></td>
+                        <td contenteditable="" class="editable" data-placeholder="0"></td>
+                        <td class="row-total">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup" id="popup">
+            <span class="close" id="closePopup">&times;</span>
+            <div class="popup-content">
+                <p id="alertMessage">Placeholder text</p>
+                <button onclick="closePopupFunc()">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Add Player Button aligned with table column -->
+
+    <button id="addPlayer"><i class="icon-plus icon-md"></i> Ny Spiller</button>
+
+
+
+    <div id="lagre-knapp">
+        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
     </div>
 
 
-    <button id="addPlayer" type="button"><i class="icon-plus icon-md"></i>Ny Spiller</button>
 
-    <div class="results-container">
+    <div class="button-container">
+        <button id="downloadCSVButton" class="fhi-btn">Last ned XL sheet</button>
 
+        <label for="uploadCSV" class="fhi-btn" id="custom-file-upload">
+            <span>Velg fil</span>
+        </label>
+        <input type="file" id="uploadCSV" style="display: none;" />
 
-        <div id="lagre-knapp">
-            <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
-        </div>
-
-        <div class="button-container">
-
-
-            <div>
-                <button id="downloadCSVButton" class="fhi-btn-primary">Last ned XL sheet</button>
-            </div>
-
-            <div>
-                <input type="file" id="uploadCSV" accept=".csv, .xlsx">
-            </div>
-
-
-        </div>
+        <span id="fileStatus" style="display: none;">Ingen fil valgt</span>
     </div>
+
+
+
     <div id="footer">
         <p class="footer-text">Utviklet av FHI </p>
     </div>

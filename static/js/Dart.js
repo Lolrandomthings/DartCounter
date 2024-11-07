@@ -20,17 +20,49 @@ function saveTableData() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result);
-                    row.setAttribute("data-saved", "true");
-                })
-                .catch(error => console.error('Error:', error));
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                row.setAttribute("data-saved", "true");
+                openPopup('Data has been saved successfully!'); // Open popup with a message
+            })
+            .catch(error => console.error('Error:', error));
         }
     });
 
     console.log("Data er lagret");
 }
+
+
+
+// Global popup functions
+function openPopup(message) {
+    const popupOverlay = document.getElementById('popupOverlay');
+    const alertMessage = document.getElementById('alertMessage');
+    if (popupOverlay && alertMessage) { // Check if elements exist
+        alertMessage.textContent = message; // Set custom message
+        popupOverlay.style.display = 'block';
+    } else {
+        console.error('Popup elements not found.');
+    }
+}
+
+function closePopupFunc() {
+    const popupOverlay = document.getElementById('popupOverlay');
+    if (popupOverlay) {
+        popupOverlay.style.display = 'none';
+    }
+}
+
+// Event listener for the close button
+document.addEventListener('DOMContentLoaded', function () {
+    const closePopup = document.getElementById('closePopup');
+    if (closePopup) {
+        closePopup.addEventListener('click', closePopupFunc);
+    } else {
+        console.error("closePopup button not found in the DOM.");
+    }
+});
 
 
 
@@ -68,6 +100,7 @@ document.getElementById("nyTavleButton").addEventListener("click", function () {
 
 
 
+
 // Single Event Listener Setup
 window.onload = function () {
     loadTableData();
@@ -82,7 +115,7 @@ window.onload = function () {
         saveButton.addEventListener("click", function () {
             saveTableData();
             updateTotalSum();
-            alert("Dataene er lagret");
+            openPopup("Dataene er lagret"); // Replace standard alert with pop-up
         });
     } else {
         console.error("lagreButton not found on the page.");
@@ -97,8 +130,9 @@ window.onload = function () {
             // Don't call saveTableData() here, wait until the user saves manually
         });
     }
-    
 };
+
+
 
 function displayCurrentDate() {
     const dateContainer = document.getElementById("currentDate");
@@ -108,6 +142,7 @@ function displayCurrentDate() {
 
     dateContainer.textContent = ` ${formattedDate}`;
 }
+
 
 function loadTableData() {
     if (localStorage.getItem("dartTableData")) {
@@ -163,11 +198,11 @@ function updateTotalSum() {
 
 
 // Function to handle file upload and parse only .xlsx files
-document.getElementById("uploadCSV").addEventListener("change", function(event) {
+document.getElementById("uploadCSV").addEventListener("change", function (event) {
     let file = event.target.files[0];
     if (file && file.name.endsWith(".xlsx")) {
         let reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             parseXLSX(e.target.result); // Pass the ArrayBuffer to parseXLSX
         };
         reader.readAsArrayBuffer(file); // Read as ArrayBuffer for XLSX
@@ -185,7 +220,7 @@ function parseXLSX(arrayBuffer) {
         let workbook = XLSX.read(data, { type: "array" });
         let firstSheetName = workbook.SheetNames[0];
         let worksheet = workbook.Sheets[firstSheetName];
-        
+
         // Convert worksheet to JSON array
         let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 0 });
         console.log("Parsed JSON Data:", jsonData); // Log to inspect the data structure
@@ -248,7 +283,7 @@ function downloadXLSX() {
 }
 
 // Use DOMContentLoaded to set up event listeners for the buttons
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const downloadButton = document.getElementById("downloadCSVButton");
 
     if (downloadButton) {
@@ -257,6 +292,18 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("downloadCSVButton not found in the DOM.");
     }
 });
+
+document.getElementById("uploadCSV").addEventListener("change", function (event) {
+    const fileStatus = document.getElementById("fileStatus");
+    if (event.target.files.length === 0) {
+        // If no file was selected (canceled), show "Ingen fil valgt"
+        fileStatus.style.display = "inline";
+    } else {
+        // If a file was selected, hide the "Ingen fil valgt" text
+        fileStatus.style.display = "none";
+    }
+});
+
 
 
 
