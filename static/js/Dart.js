@@ -24,7 +24,7 @@ function saveTableData() {
             .then(result => {
                 console.log(result);
                 row.setAttribute("data-saved", "true");
-                openPopup('Data has been saved successfully!'); // Open popup with a message
+                openPopup('Tabellen er lagret!'); // Open popup with a message
             })
             .catch(error => console.error('Error:', error));
         }

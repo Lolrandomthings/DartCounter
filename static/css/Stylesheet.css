@@ -54,7 +54,7 @@ body {
     background-color: #f0f0f0;
 }
 
-
+/* style tabellen og ny spiller- knapp */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -62,14 +62,42 @@ body {
 
 .table th,
 .table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
+    padding: 10px; /* Consistent padding for all cells */
+    height: 50px; /* Set a fixed height to prevent resizing */
+    box-sizing: border-box; /* Ensures padding doesn't change the size */
+    width: 50px;
 }
 
-.table th {
-    background-color: #f2f2f2;
+.table .editable:focus {
+    outline: none; /* Remove default outline on focus */
+    height: 50px;
 }
+
+
+#addPlayer {
+    background-color: #dbe6ec; /* Matches the header background */
+    border-radius: 2px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%; /* Full width to match the Navn column */
+    max-width: 25.6%; /* Adjust to match the actual width of the Navn column */
+    margin-bottom: 40px;
+    margin-top: -14.9px;
+    margin-left: 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+    height: 50px;
+
+}
+
+#addPlayer:hover {
+    background-color: #fff;
+}
+
+
+/*style lagre-knapp*/
 
 #lagreButton {
     display: flex;
@@ -93,23 +121,8 @@ body {
     padding-top: 50px;
 }
 
-#addPlayer {
-    background-color: transparent;
-    border-radius: 2px;
-    width: 34.6%;
-    display: flex;
-    justify-content: left;
-    margin-bottom: 40px;
-    margin-top: -14.5px;
-    margin-left: 0;
-    transition: background-color 0.2s;
-    border: none;
-}
 
-#addPlayer:hover {
-    background-color: #ffff
-}
-
+/*style footer*/
 
 #footer {
     color: white;
@@ -261,7 +274,7 @@ body {
 
 /* Centered pop-up box */
 .popup {
-    font-family: Arial, sans-serif;
+
     position: absolute;
     top: 50%;
     left: 50%;
@@ -290,7 +303,6 @@ body {
     margin: 20px auto 0; /* Adds space around the button and centers it */
     padding: 10px 20px;
     font-size: 16px;
-    font-weight: bold;
     background-color: #0067c4;
     color: #fff;
     border: none;
