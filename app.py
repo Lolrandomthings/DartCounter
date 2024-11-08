@@ -10,8 +10,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-
-#Load current and last table names from metadata
+# Last inn gjeldende og forrige tabellnavn fra metadata
 def load_table_names():
     conn = get_db_connection()
     row = conn.execute('SELECT current_table, last_table FROM metadata WHERE id = 1').fetchone()
@@ -22,9 +21,7 @@ def load_table_names():
         print("Metadata not found; initializing with default.")
     return row['current_table'] if row else "darttabell", row['last_table'] if row else None
 
-
-currentTableName, lastTableName = load_table_names() #Initialize currentTableName and lastTableName from metadata
-
+currentTableName, lastTableName = load_table_names() # Initialiser currentTableName og lastTableName fra metadata
 
 from datetime import datetime
 
@@ -32,17 +29,17 @@ def create_new_round_on_startup():
     global currentTableName, lastTableName
     conn = get_db_connection()
 
-    # Retrieve last table from metadata
+    # Hent forrige tabell fra metadata
     row = conn.execute('SELECT current_table, last_table FROM metadata WHERE id = 1').fetchone()
     lastTableName = row['last_table'] if row else "darttabell"
     currentTableName = f"darttabell_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
 
-    # Check if the new table needs to be created
+    # Sjekk om den nye tabellen må opprettes
     if not row or not conn.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{currentTableName}'").fetchone():
-        print(f"Startup: Creating new table {currentTableName}, last table was {lastTableName}")
+        print(f"Startup: Oppretter ny tabell {currentTableName}, forrige tabell var {lastTableName}")
         
         try:
-            # Create the new table with the explicit schema
+            # Opprett den nye tabellen med eksplisitt skjema
             conn.execute(f'''
                 CREATE TABLE {currentTableName} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,60 +51,57 @@ def create_new_round_on_startup():
                     UNIQUE(navn, kast1, kast2, date_played)
                 )
             ''')
-            # Update metadata
+            # Oppdater metadata
             conn.execute('UPDATE metadata SET current_table = ?, last_table = ? WHERE id = 1',
                          (currentTableName, lastTableName))
             conn.commit()
-            print(f"Table {currentTableName} created successfully on startup.")
+            print(f"Tabell {currentTableName} opprettet vellykket ved oppstart.")
         except sqlite3.Error as e:
-            print(f"Error creating new table on startup: {str(e)}")
+            print(f"Feil ved oppretting av ny tabell ved oppstart: {str(e)}")
         finally:
             conn.close()
     else:
-        print(f"Table {currentTableName} already exists or metadata not found. Skipping creation.")
+        print(f"Tabell {currentTableName} eksisterer allerede eller metadata ikke funnet. Hopper over oppretting.")
         conn.close()
-
 
 @app.route('/api/create_new_round', methods=['POST'])
 def create_new_round():
     global currentTableName, lastTableName
     
-    # Update lastTableName to the current one before creating a new table
+    # Oppdater lastTableName til gjeldende før du oppretter ny tabell
     lastTableName = currentTableName
     currentTableName = f"darttabell_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
-    print(f"Creating new table: {currentTableName}, last table was: {lastTableName}")
+    print(f"Oppretter ny tabell: {currentTableName}, forrige tabell var: {lastTableName}")
 
     conn = get_db_connection()
     try:
-        # Define the schema explicitly for new tables
+        # Definer skjemaet eksplisitt for nye tabeller
         conn.execute(f'''
             CREATE TABLE {currentTableName} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 navn TEXT NOT NULL,
                 kast1 INTEGER NOT NULL,
                 kast2 INTEGER NOT NULL,
-                total_sum INTEGER AS (kast1 + kast2 + 2) STORED, -- Automatically add +2 bonus
+                total_sum INTEGER AS (kast1 + kast2 + 2) STORED, -- Legger automatisk til +2 bonus
                 date_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(navn, kast1, kast2, date_played)
             )
         ''')
         
-        # Update metadata with the new current and last table names
+        # Oppdater metadata med nye gjeldende og forrige tabellnavn
         conn.execute('UPDATE metadata SET current_table = ?, last_table = ? WHERE id = 1',
                      (currentTableName, lastTableName))
         conn.commit()
-        print(f"Table {currentTableName} created successfully.")
+        print(f"Tabell {currentTableName} opprettet vellykket.")
     except sqlite3.Error as e:
-        print(f"Error creating new table: {str(e)}")
+        print(f"Feil ved oppretting av ny tabell: {str(e)}")
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
 
     return jsonify({"table_name": currentTableName}), 201
 
-
-
-# Route to add entries to the currently active table
+# Rute for å legge til oppføringer i den aktive tabellen
 @app.route('/api/dartboard', methods=['POST'])
 def add_dartboard_entry():
     global currentTableName
@@ -124,55 +118,47 @@ def add_dartboard_entry():
     conn.commit()
     conn.close()
 
-    return jsonify({'status': 'Entry added successfully'}), 201
+    return jsonify({'status': 'Oppføring lagt til vellykket'}), 201
 
-
-
-# Route to display the last completed table on Poengtavle
+# Rute for å vise siste fullførte tabell på Poengtavle
 @app.route('/poengtavle')
 def poeng_page():
     global lastTableName
     conn = get_db_connection()
     
-    # Use lastTableName to fetch entries from the last completed table
+    # Bruk lastTableName for å hente oppføringer fra siste fullførte tabell
     if lastTableName:
         entries = conn.execute(f'SELECT * FROM {lastTableName} ORDER BY date_played DESC').fetchall()
         results = [dict(row) for row in entries]
     else:
-        results = []  # If there's no last table, show an empty result
+        results = []  # Hvis det ikke finnes en siste tabell, vis tomt resultat
 
     conn.close()
     return render_template('Poengtavle.html', entries=results)
 
-
-
-# Route to serve the main HTML page
+# Rute for å vise hoved-HTML-siden
 @app.route('/')
 def index_page():
     return render_template('Index.html')
 
-
-# Route to serve the main HTML page
+# Rute for å vise hoved-HTML-siden
 @app.route('/Regler')
 def regler_page():
     return render_template('Regler.html') 
- 
 
-
-# Route to get all dartboard entries
+# Rute for å hente alle dartboard-oppføringer
 @app.route('/api/dartboard', methods=['GET'])
 def get_dartboard_entries():
     conn = get_db_connection()
     entries = conn.execute('SELECT * FROM darttabell ORDER BY date_played DESC').fetchall()
     conn.close()
     
-    # Convert rows to list of dicts
+    # Konverter rader til liste med ordbøker
     results = [dict(row) for row in entries]
     return jsonify(results)
 
-
 if __name__ == '__main__':
-    # Only run create_new_round_on_startup in the main process
+    # Kjør create_new_round_on_startup kun i hovedprosessen
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
         create_new_round_on_startup()
     app.run(debug=True)

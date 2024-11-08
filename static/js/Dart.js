@@ -6,13 +6,13 @@ function saveTableData() {
             const playerName = row.querySelector("th").textContent.trim();
             const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
             const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
-            const totalSum = kast1 + kast2 + 2; // Include +2 bonus here for saving
+            const totalSum = kast1 + kast2 + 2; // Legg til +2 bonus her for lagring
 
             const data = {
                 navn: playerName,
                 kast1: kast1,
                 kast2: kast2,
-                total_sum: totalSum // Send the bonus-inclusive total to the server
+                total_sum: totalSum // Send totalsummen med bonus til serveren
             };
 
             fetch('/api/dartboard', {
@@ -24,26 +24,55 @@ function saveTableData() {
             .then(result => {
                 console.log(result);
                 row.setAttribute("data-saved", "true");
-                openPopup('Tabellen er lagret!'); // Open popup with a message
+                openPopup('Data har blitt lagret!'); // Vis pop-up
+                displayBestScore(); // Vis den beste poengsummen etter lagring
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Feil:', error));
         }
     });
 
     console.log("Data er lagret");
 }
 
+// Funksjon for å finne og vise spilleren med beste poengsum
+function displayBestScore() {
+    let rows = document.querySelectorAll("tbody tr");
+    let bestScore = 0;
+    let bestPlayer = "";
 
+    // Gå gjennom hver rad for å finne spilleren med høyeste poengsum
+    rows.forEach(row => {
+        const playerName = row.querySelector("th").textContent.trim();
+        const kast1 = parseInt(row.querySelector("td:nth-child(2)").textContent.trim()) || 0;
+        const kast2 = parseInt(row.querySelector("td:nth-child(3)").textContent.trim()) || 0;
+        const totalScore = kast1 + kast2 + 2; // Inkluder +2 bonus
 
-// Global popup functions
+        if (totalScore > bestScore) {
+            bestScore = totalScore;
+            bestPlayer = playerName;
+        }
+    });
+
+    // Vis den beste poengsummen i bestScoreBox
+    const bestScoreBox = document.getElementById("bestScoreBox");
+    if (bestPlayer) {
+        bestScoreBox.textContent = `${bestPlayer} fikk best poengsum med ${bestScore} poeng!`;
+        bestScoreBox.style.display = "block"; // Gjør boksen synlig
+    } else {
+        bestScoreBox.textContent = "Ingen spillere med poeng enda.";
+        bestScoreBox.style.display = "block";
+    }
+}
+
+// Globale popup-funksjoner
 function openPopup(message) {
     const popupOverlay = document.getElementById('popupOverlay');
     const alertMessage = document.getElementById('alertMessage');
-    if (popupOverlay && alertMessage) { // Check if elements exist
-        alertMessage.textContent = message; // Set custom message
+    if (popupOverlay && alertMessage) { // Sjekk om elementer finnes
+        alertMessage.textContent = message; // Sett tilpasset melding
         popupOverlay.style.display = 'block';
     } else {
-        console.error('Popup elements not found.');
+        console.error('Popup-elementer ikke funnet.');
     }
 }
 
@@ -54,85 +83,99 @@ function closePopupFunc() {
     }
 }
 
-// Event listener for the close button
+// Event listener for lukkeknappen
 document.addEventListener('DOMContentLoaded', function () {
     const closePopup = document.getElementById('closePopup');
     if (closePopup) {
         closePopup.addEventListener('click', closePopupFunc);
     } else {
-        console.error("closePopup button not found in the DOM.");
+        console.error("closePopup-knappen ikke funnet i DOM.");
     }
 });
 
-
-
 document.getElementById("nyTavleButton").addEventListener("click", function () {
     const button = this;
-    button.disabled = true; // Disable button to prevent multiple clicks
+    button.disabled = true; // Deaktiver knappen for å forhindre flere klikk
 
+    // Gjør en POST-forespørsel for å opprette en ny runde i backend
     fetch('/api/create_new_round', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log("New round table created:", data.table_name);
+    .then(response => response.json())
+    .then(data => {
+        console.log("Ny rundetabell opprettet:", data.table_name);
 
-            // Reset the board in the frontend
-            let tbody = document.querySelector("tbody");
-            tbody.innerHTML = `
-                <tr id="poenger-rad1">
-                    <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
-                    <td contenteditable="" class="editable"data-placeholder="0"></td>
-                    <td contenteditable="" class="editable" data-placeholder="0"></td>
-                    <td class="row-total">0</td>
-                </tr>
-        `;
-            updateTotalSum();
-        })
-        .catch(error => console.error('Error creating new round:', error))
-        .finally(() => {
-            setTimeout(() => { button.disabled = false; }, 2000); // Re-enable after 2 seconds
-        });
+        // Gå til hovedspillsiden (index.html eller din hovedspillside)
+        window.location.href = "/"; // Juster om hovedsiden har et annet navn
+    })
+    .catch(error => console.error('Feil ved oppretting av ny runde:', error))
+    .finally(() => {
+        setTimeout(() => { button.disabled = false; }, 2000); // Aktiver etter 2 sekunder
+    });
 });
 
+// Funksjon for å sjekke om `newRound=true` finnes i URL-en
+function isNewRound() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('newRound') === 'true';
+}
 
+// Nullstill tabellen med en tom rad for en ny runde
+function resetTableForNewRound() {
+    let tbody = document.querySelector("tbody");
 
+    // Fjern eksisterende rader og legg til en tom rad
+    tbody.innerHTML = `
+        <tr id="poenger-rad1">
+            <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
+            <td contenteditable="" class="editable" data-placeholder="0"></td>
+            <td contenteditable="" class="editable" data-placeholder="0"></td>
+            <td class="row-total">0</td>
+        </tr>
+    `;
 
-// Single Event Listener Setup
+    // Oppdater eventuelle summer eller annen info om nødvendig
+    updateTotalSum();
+    console.log("Tabell nullstilt for ny runde");
+}
+
 window.onload = function () {
-    loadTableData();
+    // Sjekk om dette er en ny runde og nullstill tabellen om nødvendig
+    if (isNewRound()) {
+        resetTableForNewRound();
+    } else {
+        loadTableData();
+    }
+
     updateTotalSum();
     displayCurrentDate();
 
     const saveButton = document.getElementById("lagreButton");
     const addPlayerButton = document.getElementById("addPlayer");
 
-    // Attach event listener for "lagreButton" only once
+    // Legg til event listener for "lagreButton" kun én gang
     if (saveButton) {
         saveButton.addEventListener("click", function () {
             saveTableData();
             updateTotalSum();
-            openPopup("Dataene er lagret"); // Replace standard alert with pop-up
+            openPopup("Dataene er lagret"); // Erstatt standardvarsel med pop-up
         });
     } else {
-        console.error("lagreButton not found on the page.");
+        console.error("lagreButton ikke funnet på siden.");
     }
 
-    // Attach event listener for "addPlayer" only once
+    // Legg til event listener for "addPlayer" kun én gang
     if (addPlayerButton) {
         addPlayerButton.addEventListener("click", function () {
             let tbody = document.querySelector("tbody");
             let newRow = createRow();
             tbody.appendChild(newRow);
-            // Don't call saveTableData() here, wait until the user saves manually
         });
     }
 };
-
-
 
 function displayCurrentDate() {
     const dateContainer = document.getElementById("currentDate");
@@ -142,7 +185,6 @@ function displayCurrentDate() {
 
     dateContainer.textContent = ` ${formattedDate}`;
 }
-
 
 function loadTableData() {
     if (localStorage.getItem("dartTableData")) {
@@ -170,7 +212,6 @@ function loadTableData() {
 function createRow() {
     let newRow = document.createElement("tr");
     newRow.innerHTML = `
-
         <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
         <td contenteditable="" class="editable"data-placeholder="0"></td>
         <td contenteditable="" class="editable" data-placeholder="0"></td>
@@ -186,34 +227,33 @@ function updateTotalSum() {
         let cells = row.querySelectorAll("td");
         let throw1 = parseInt(cells[0].textContent.trim()) || 0;
         let throw2 = parseInt(cells[1].textContent.trim()) || 0;
-        let rowTotal = throw1 + throw2 + 2; // Automatically add +2 bonus
+        let rowTotal = throw1 + throw2 + 2; // Legg til +2 bonus automatisk
 
-        console.log(`Player row: ${row.querySelector("th").textContent.trim()}`);
-        console.log(`Throw 1: ${throw1}, Throw 2: ${throw2}, Total with Bonus: ${rowTotal}`);
+        console.log(`Spillerrad: ${row.querySelector("th").textContent.trim()}`);
+        console.log(`Kast 1: ${throw1}, Kast 2: ${throw2}, Total med Bonus: ${rowTotal}`);
 
-        // Update the total in the row for display
+        // Oppdater totalen i raden for visning
         row.querySelector(".row-total").textContent = rowTotal;
     });
 }
 
-
-// Function to handle file upload and parse only .xlsx files
+// Funksjon for å håndtere filopplasting og analysere kun .xlsx-filer
 document.getElementById("uploadCSV").addEventListener("change", function (event) {
     let file = event.target.files[0];
     if (file && file.name.endsWith(".xlsx")) {
         let reader = new FileReader();
         reader.onload = function (e) {
-            parseXLSX(e.target.result); // Pass the ArrayBuffer to parseXLSX
+            parseXLSX(e.target.result); // Send ArrayBuffer til parseXLSX
         };
-        reader.readAsArrayBuffer(file); // Read as ArrayBuffer for XLSX
+        reader.readAsArrayBuffer(file); // Les som ArrayBuffer for XLSX
     } else {
-        console.error("Unsupported file type. Please upload an XLSX file.");
+        console.error("Ugyldig filtype. Vennligst last opp en XLSX-fil.");
     }
 });
 
-// Function to parse the uploaded .xlsx file and display it in the table
+// Funksjon for å analysere den opplastede .xlsx-filen og vise den i tabellen
 function parseXLSX(arrayBuffer) {
-    console.log("parseXLSX function called");
+    console.log("parseXLSX-funksjon kalt");
 
     try {
         let data = new Uint8Array(arrayBuffer);
@@ -221,23 +261,23 @@ function parseXLSX(arrayBuffer) {
         let firstSheetName = workbook.SheetNames[0];
         let worksheet = workbook.Sheets[firstSheetName];
 
-        // Convert worksheet to JSON array
+        // Konverter regneark til JSON-array
         let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 0 });
-        console.log("Parsed JSON Data:", jsonData); // Log to inspect the data structure
+        console.log("Analysert JSON Data:", jsonData); // Logg for å inspisere datastruktur
 
         let tableBody = document.querySelector("tbody");
         if (!tableBody) {
-            console.error("Table body element not found.");
+            console.error("Tabellkropp-element ikke funnet.");
             return;
         }
 
-        tableBody.innerHTML = ""; // Clear existing rows
+        tableBody.innerHTML = ""; // Fjern eksisterende rader
 
-        // Only process rows that have valid data in expected columns
+        // Behandle kun rader som har gyldige data i forventede kolonner
         jsonData.slice(1).forEach((row) => {
             if (
-                typeof row[0] === 'string' && row[0].trim() !== '' && // Name is non-empty
-                !isNaN(row[1]) && !isNaN(row[2]) && !isNaN(row[3])    // Scores are numeric
+                typeof row[0] === 'string' && row[0].trim() !== '' && // Navn er ikke tomt
+                !isNaN(row[1]) && !isNaN(row[2]) && !isNaN(row[3])    // Poengsummer er numeriske
             ) {
                 let newRow = document.createElement("tr");
                 newRow.innerHTML = `
@@ -247,19 +287,19 @@ function parseXLSX(arrayBuffer) {
                     <td class="row-total">${row[3]}</td>
                 `;
                 tableBody.appendChild(newRow);
-                console.log(`Row added to table: ${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}`);
+                console.log(`Rad lagt til i tabell: ${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}`);
             } else {
-                console.warn("Skipping invalid or empty row:", row);
+                console.warn("Hopper over ugyldig eller tom rad:", row);
             }
         });
 
-        updateTotalSum(); // Assuming this function recalculates totals
+        updateTotalSum(); // Forutsatt at denne funksjonen beregner totalsummer
     } catch (error) {
-        console.error("Error parsing XLSX file:", error);
+        console.error("Feil ved analyse av XLSX-fil:", error);
     }
 }
 
-// Function to download the table data as an .xlsx file
+// Funksjon for å laste ned tabelldata som en .xlsx-fil
 function downloadXLSX() {
     let table = document.querySelector(".table");
     let rows = table.querySelectorAll("tr");
@@ -282,28 +322,24 @@ function downloadXLSX() {
     XLSX.writeFile(wb, "dart_table.xlsx");
 }
 
-// Use DOMContentLoaded to set up event listeners for the buttons
+// Bruk DOMContentLoaded for å sette opp event listeners for knappene
 document.addEventListener("DOMContentLoaded", function () {
     const downloadButton = document.getElementById("downloadCSVButton");
 
     if (downloadButton) {
         downloadButton.addEventListener("click", downloadXLSX);
     } else {
-        console.error("downloadCSVButton not found in the DOM.");
+        console.error("downloadCSVButton ikke funnet i DOM.");
     }
 });
 
 document.getElementById("uploadCSV").addEventListener("change", function (event) {
     const fileStatus = document.getElementById("fileStatus");
     if (event.target.files.length === 0) {
-        // If no file was selected (canceled), show "Ingen fil valgt"
+        // Hvis ingen fil ble valgt (avbrutt), vis "Ingen fil valgt"
         fileStatus.style.display = "inline";
     } else {
-        // If a file was selected, hide the "Ingen fil valgt" text
+        // Hvis en fil ble valgt, skjul teksten "Ingen fil valgt"
         fileStatus.style.display = "none";
     }
 });
-
-
-
-

@@ -15,7 +15,7 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    /* Keeps the header on top of table content */
+    /* Holder headeren over tabellinnholdet */
 }
 
 .container {
@@ -23,13 +23,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 50px;
-    /* Optional: Add padding for spacing */
+    /* Valgfritt: Legg til padding for avstand */
 }
 
 .tittel {
     text-align: center;
     flex-grow: 1;
-    /* This allows .tittel to take up available space in the center */
+    /* Dette lar .tittel ta opp tilgjengelig plass i midten */
     padding-left: 140px;
 }
 
@@ -49,12 +49,11 @@ h2 {
     margin: 0;
 }
 
-
 body {
     background-color: #f0f0f0;
 }
 
-/* style tabellen og ny spiller- knapp */
+/* Style tabellen og ny spiller-knapp */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -62,26 +61,25 @@ body {
 
 .table th,
 .table td {
-    padding: 10px; /* Consistent padding for all cells */
-    height: 50px; /* Set a fixed height to prevent resizing */
-    box-sizing: border-box; /* Ensures padding doesn't change the size */
+    padding: 10px; /* Konsistent padding for alle celler */
+    height: 50px; /* Sett en fast høyde for å unngå endring */
+    box-sizing: border-box; /* Sikrer at padding ikke endrer størrelse */
     width: 50px;
 }
 
 .table .editable:focus {
-    outline: none; /* Remove default outline on focus */
+    outline: none; /* Fjern standard omriss ved fokus */
     height: 50px;
 }
 
-
 #addPlayer {
-    background-color: #dbe6ec; /* Matches the header background */
+    background-color: #dbe6ec; /* Matcher header-bakgrunn */
     border-radius: 2px;
     display: flex;
     justify-content: left;
     align-items: center;
-    width: 100%; /* Full width to match the Navn column */
-    max-width: 25.6%; /* Adjust to match the actual width of the Navn column */
+    width: 100%; /* Full bredde for å matche Navn-kolonnen */
+    max-width: 25.6%; /* Juster for å matche den faktiske bredden til Navn-kolonnen */
     margin-bottom: 40px;
     margin-top: -14.9px;
     margin-left: 0;
@@ -89,22 +87,19 @@ body {
     transition: background-color 0.2s;
     border: none;
     height: 50px;
-
 }
 
 #addPlayer:hover {
     background-color: #fff;
 }
 
-
-/*style lagre-knapp*/
-
+/* Style lagre-knapp */
 #lagreButton {
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
-    /* Adjust for a rounded button if desired */
+    /* Juster for en avrundet knapp om ønskelig */
     position: relative;
     top: 50%;
     left: 50%;
@@ -121,9 +116,7 @@ body {
     padding-top: 50px;
 }
 
-
-/*style footer*/
-
+/* Style footer */
 #footer {
     color: white;
     background-color: #393c61;
@@ -141,7 +134,6 @@ body {
     font-weight: 900;
     font-size: 20px;
 }
-
 
 .btn-group {
     display: flex;
@@ -167,14 +159,10 @@ body {
     margin-bottom: 30px;
     margin-top: 40px;
     font-size: 18px;
-
 }
 
-
-/* Style for import and export buttons */
-/* Common button style */
-
-
+/* Stil for import- og eksportknapper */
+/* Felles knappestil */
 .fhi-btn {
     display: inline-flex;
     justify-content: center;
@@ -189,38 +177,34 @@ body {
     transition: background-color 0.2s;
 }
 
-/* Style adjustments to make buttons appear connected */
+/* Stiljusteringer for å få knappene til å se tilkoblet ut */
 #downloadCSVButton {
     border-radius: 4px 0 0 4px;
-    /* Rounded on the left */
+    /* Avrundet på venstre side */
     margin-right: -1px;
-    /* Overlap to avoid any visible gap */
+    /* Overlapp for å unngå synlig gap */
 }
 
 #custom-file-upload {
     border-radius: 0 4px 4px 0;
-    /* Rounded on the right */
+    /* Avrundet på høyre side */
 }
 
 .button-container {
     display: flex;
     gap: 0;
-    /* Remove gap between buttons */
+    /* Fjern gap mellom knappene */
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    /* Ensure the container doesn’t have visible gaps */
+    /* Sikrer at beholderen ikke har synlige gap */
 }
 
 .fhi-btn:hover {
     background-color: #0e4485;
 }
 
-
-
-
-/*style regler.html */
-
+/* Style regler.html */
 .rules-container {
     display: flex;
     justify-content: center;
@@ -245,36 +229,34 @@ body {
     text-align: center;
 }
 
-/* Placeholder styling for empty contenteditable cells */
+/* Placeholder-stil for tomme contenteditable-celler */
 .editable:empty::before {
     content: attr(data-placeholder);
     color: #393c61;
     pointer-events: none;
-    /* Prevents the placeholder text from being selectable */
+    /* Forhindrer at plassholdertekst kan velges */
 }
 
-/* Remove placeholder text on focus */
+/* Fjern plassholdertekst ved fokus */
 .editable:focus::before {
     content: '';
 }
 
-/*data saved PopUp*/
-
-/* Overlay to cover the entire screen */
+/* data lagret PopUp */
+/* Overlegg for å dekke hele skjermen */
 .popup-overlay {
-    display: none; /* Hidden by default */
+    display: none; /* Skjult som standard */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 1000; /* Ensures it's above other content */
+    background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrunn */
+    z-index: 1000; /* Sikrer at det er over annet innhold */
 }
 
-/* Centered pop-up box */
+/* Sentrert pop-up boks */
 .popup {
-
     position: absolute;
     top: 50%;
     left: 50%;
@@ -283,11 +265,11 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* Above the overlay */
-    width: 300px; /* Optional width */
+    z-index: 1001; /* Over overlay */
+    width: 300px; /* Valgfri bredde */
 }
 
-/* Close button for the pop-up */
+/* Lukkeknapp for pop-up */
 .popup .close {
     position: absolute;
     top: 10px;
@@ -297,27 +279,38 @@ body {
     color: #333;
 }
 
-/* Button inside the pop-up */
+/* Knapp inne i pop-up */
 .popup button {
-    display: block; /* Centers the button */
-    margin: 20px auto 0; /* Adds space around the button and centers it */
+    display: block; /* Sentrerer knappen */
+    margin: 20px auto 0; /* Legger til avstand rundt knappen og sentrerer den */
     padding: 10px 20px;
     font-size: 16px;
     background-color: #0067c4;
     color: #fff;
     border: none;
-    border-radius: 6px; /* Slightly rounded corners for a modern look */
+    border-radius: 6px; /* Lett avrundede kanter for moderne utseende */
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions for hover effects */
+    transition: background-color 0.3s, transform 0.2s; /* Glatte overganger for hovring */
 }
 
 .popup button:hover {
-    background-color: #0056b3; /* Darker shade for hover effect */
-    transform: scale(1.05); /* Slight zoom-in effect */
+    background-color: #0056b3; /* Mørkere nyanse ved hovring */
+    transform: scale(1.05); /* Lett zoom-effekt */
 }
 
 .popup button:active {
-    background-color: #004085; /* Even darker shade on click */
-    transform: scale(0.95); /* Slight zoom-out effect */
+    background-color: #004085; /* Enda mørkere ved klikk */
+    transform: scale(0.95); /* Lett zoom-ut effekt */
 }
 
+#bestScoreBox {
+    display: none; /* Skjult som standard */
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #dbe6ec;
+    text-align: center;
+    max-width: 500px;
+    margin: 10px auto; /* Sentrerer boksen horisontalt */
+    font-size: 16px; /* Justerer tekststørrelsen for lesbarhet */
+}
