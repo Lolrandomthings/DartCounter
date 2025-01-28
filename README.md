@@ -1,8 +1,6 @@
 # Darttavle Prosjekt
 
-Dette prosjektet er en nettbasert applikasjon for å spore poeng på en darttavle, lagre data lokalt og samhandle med en database ved bruk av Flask og SQLite3. Applikasjonen inkluderer funksjoner for å legge til spillere, registrere poeng, beregne bonuspoeng, eksportere/importere `.xlsx`-filer og vise data i en tabell.
-
-
+Dette prosjektet er en nettbasert applikasjon for å spore poeng på en darttavle, den importerer og expoterer XL-filer og viser datane i en tabell. Man har muligheten til å se tidligere runder, og totalsummen av poengene de siste tre rundene. 
 
 ## Forutsetninger
 
