@@ -18,12 +18,18 @@ For å kjøre dette prosjektet trenges det følgende installert på datamaskinen
 
 ````bash
 git clone URL ti den repository
-cd Dartcounter
+cd DartCounter
 ````
 2. **Oprett et virtuelt miljø (Dette er valgfritt, men anbefales)**
 
+Skriv navnet til den virtuelt miljø 
+
 ````bash
 python -m venv venv
+````
+Deretter aktiver miljøet 
+````bash
+
 venv\Scripts\activate  
 ````
 3. **Installer avhengigheter**
