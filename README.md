@@ -25,7 +25,7 @@ cd DartCounter
 Skriv navnet til den virtuelt miljø 
 
 ````bash
-python -m venv venv
+python -m venv myenv
 ````
 Deretter aktiver miljøet 
 ````bash
