@@ -1,6 +1,10 @@
 # Darttavle Prosjekt 🎯
 
-Dette prosjektet er en enkelt nettbasert applikasjon for å spore poeng på en darttavle, den importerer og expoterer XL-filer og viser datane i en tabell. Man har muligheten til å se total summen hvert person fikk av de siste tre runder. Det finnes en funksjon for å legge til flere spiller, men spillerne er begrenset på navn. Ikke mer enn en spiller kan ha sammenavn, blir funksjonet stoppet inntil feiler blir rettet. I tillegg til dette har aplikasjonen input felte hvor man kan sette in verdier til første og andre kast av runden som foregår. Aplikasjonen er utvidet for å utvikles videre og det er mulig man kan jobbe med den på en database 
+Dette prosjektet er en enkel nettbasert applikasjon designet for å spore poeng på en darttavle. Applikasjonen støtter import og eksport av Excel-filer og viser dataene i et oversiktlig tabellformat. Brukerne kan se den totale poengsummen for hver spiller over de siste tre rundene.
+
+Det finnes en funksjon for å legge til nye spillere, men navnevalgene har begrensninger – ingen spillere kan ha samme navn. Hvis et duplikat oppdages, stoppes funksjonen inntil feilen er rettet.
+
+I tillegg inkluderer applikasjonen et inputfelt hvor man kan legge inn verdier for både det første og andre kastet i den pågående runden. Applikasjonen er fleksibel for videreutvikling og kan potensielt jobbe med en database i fremtiden.
 
 ## Forutsetninger
 
