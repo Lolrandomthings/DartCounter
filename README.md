@@ -2,7 +2,7 @@
 
 Dette prosjektet er en enkel nettbasert applikasjon designet for å spore poeng på en darttavle. Applikasjonen støtter import og eksport av Excel-filer og viser dataene i et oversiktlig tabellformat. Brukerne kan se den totale poengsummen for hver spiller over de siste tre rundene.
 
-Det finnes en funksjon for å legge til nye spillere, men navnevalgene har begrensninger – ingen spillere kan ha samme navn. Hvis et duplikat oppdages, stoppes funksjonen inntil feilen er rettet.
+Det finnes en funksjon for å legge til nye spillere, men navnevalgene har begrensninger – ingen spillere kan ha samme navn. Hvis et navn finnes blir skrevet to ganger, vises det en kort feilmelding som forklarer problemet, ved siden av navnet som er skrevet to ganger.
 
 I tillegg inkluderer applikasjonen et inputfelt hvor man kan legge inn verdier for både det første og andre kastet i den pågående runden. Applikasjonen er fleksibel for videreutvikling og kan potensielt jobbe med en database i fremtiden.
 
