@@ -30,9 +30,11 @@ Skriv navnet til den virtuelt miljø
 python -m venv myenv
 ````
 Deretter aktiver miljøet 
+
 ````bash
 
-venv\Scripts\activate  
+myenv\Scripts\activate
+ 
 ````
 3. **Installer avhengigheter**
 
