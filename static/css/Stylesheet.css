@@ -1,5 +1,4 @@
-#header,
-#headerRegler {
+#header {
     background-color: #393c61;
     color: white;
     margin-bottom: 5%;
@@ -9,11 +8,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-}
-
-#header {
-    position: sticky;
-    top: 0;
+    top: 0; 
     z-index: 1;
     /* Holder headeren over tabellinnholdet */
 }
