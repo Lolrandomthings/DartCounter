@@ -72,6 +72,11 @@ body {
     height: 50px;
 }
 
+.table .kast:focus {
+    outline: none; /* Fjern standard omriss ved fokus for kast1 kast2 */
+    height: 50px;
+}
+
 #addPlayer {
     background-color: #dbe6ec; /* Matcher header-bakgrunn */
     border-radius: 2px;
