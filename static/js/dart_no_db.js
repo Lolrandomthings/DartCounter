@@ -13,7 +13,13 @@ function setupEventListeners() {
 // Håndterer opplastning av en Excel-fil
 function handleFileUpload(event) {
     let file = event.target.files[0]; // Henter den valgte filen
-    if (!file?.name.endsWith(".xlsx")) return console.error("Ugyldig filtype."); // Sjekker om det er en Excel-fil
+    if (!file?.name.endsWith(".xlsx")) {// Sjekker om det er en Excel-fil
+        showMessage("Ugyldig filtype, vennligst last opp en .xlsx fil");
+        return;
+    } else {
+        // Clear any previous error message if the file is valid.
+        showMessage("uploadCSV", "");
+    }
 
     let reader = new FileReader(); // Oppretter en FileReader for å lese filen
     reader.onload = (e) => processXLSXData(e.target.result); // Behandler data når lesing er fullført
@@ -136,4 +142,15 @@ function downloadXLSX() {
 function saveTableData() {
     updateTotalSum();
     console.log("Lagrer data og oppdaterer total sum for kast 1 og kast 2");
+}
+
+function showMessage(message) {
+    let messageElement = document.getElementById("global-error");
+    let textElement = document.getElementById("error-text");
+
+    if (textElement) {
+        textElement.textContent = message; // Update only the text
+    }
+
+    messageElement.style.display = "flex"; // Show the message
 }

@@ -82,16 +82,23 @@
     </div>
 
     <div class="button-container">
-        <button id="downloadCSVButton" class="fhi-btn">Last ned excel-fil</button>
+        <button id="downloadCSVButton" class="fhi-btn">Last ned excel-fil <i class="icon-download icon-sm" id="download-ikon"></i></button>
 
         <label for="uploadCSV" class="fhi-btn" id="custom-file-upload">
-            <span>Velg fil</span>
+            <span>Velg fil<i id="upload-ikon" class="icon-upload icon-sm" style="color: red;"></i></span>
         </label>
         <input type="file" id="uploadCSV" style="display: none;" />
 
         <span id="fileStatus" style="display: none;">Ingen fil valgt</span>
-        
     </div>
+
+    <div id="global-error" class="error-message" style="display: none;">
+        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
+        
+        <span id="error-text"></span>
+    </div>
+
+
 
 
 

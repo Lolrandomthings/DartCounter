@@ -8,7 +8,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    top: 0; 
+    top: 0;
     z-index: 1;
     /* Holder headeren over tabellinnholdet */
 }
@@ -56,30 +56,38 @@ body {
 
 .table th,
 .table td {
-    padding: 10px; /* Konsistent padding for alle celler */
-    height: 50px; /* Sett en fast høyde for å unngå endring */
-    box-sizing: border-box; /* Sikrer at padding ikke endrer størrelse */
+    padding: 10px;
+    /* Konsistent padding for alle celler */
+    height: 50px;
+    /* Sett en fast høyde for å unngå endring */
+    box-sizing: border-box;
+    /* Sikrer at padding ikke endrer størrelse */
     width: 50px;
 }
 
 .table .editable:focus {
-    outline: none; /* Fjern standard omriss ved fokus */
+    outline: none;
+    /* Fjern standard omriss ved fokus */
     height: 50px;
 }
 
 .table .kast:focus {
-    outline: none; /* Fjern standard omriss ved fokus for kast1 kast2 */
+    outline: none;
+    /* Fjern standard omriss ved fokus for kast1 kast2 */
     height: 50px;
 }
 
 #addPlayer {
-    background-color: #dbe6ec; /* Matcher header-bakgrunn */
+    background-color: #dbe6ec;
+    /* Matcher header-bakgrunn */
     border-radius: 2px;
     display: flex;
     justify-content: left;
     align-items: center;
-    width: 100%; /* Full bredde for å matche Navn-kolonnen */
-    max-width: 25.6%; /* Juster for å matche den faktiske bredden til Navn-kolonnen */
+    width: 100%;
+    /* Full bredde for å matche Navn-kolonnen */
+    max-width: 25.6%;
+    /* Juster for å matche den faktiske bredden til Navn-kolonnen */
     margin-bottom: 40px;
     margin-top: -14.9px;
     margin-left: 0;
@@ -245,14 +253,17 @@ body {
 /* data lagret PopUp */
 /* Overlegg for å dekke hele skjermen */
 .popup-overlay {
-    display: none; /* Skjult som standard */
+    display: none;
+    /* Skjult som standard */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrunn */
-    z-index: 1000; /* Sikrer at det er over annet innhold */
+    background: rgba(0, 0, 0, 0.5);
+    /* Halvtransparent bakgrunn */
+    z-index: 1000;
+    /* Sikrer at det er over annet innhold */
 }
 
 /* Sentrert pop-up boks */
@@ -265,8 +276,10 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* Over overlay */
-    width: 300px; /* Valgfri bredde */
+    z-index: 1001;
+    /* Over overlay */
+    width: 300px;
+    /* Valgfri bredde */
 }
 
 /* Lukkeknapp for pop-up */
@@ -281,36 +294,75 @@ body {
 
 /* Knapp inne i pop-up */
 .popup button {
-    display: block; /* Sentrerer knappen */
-    margin: 20px auto 0; /* Legger til avstand rundt knappen og sentrerer den */
+    display: block;
+    /* Sentrerer knappen */
+    margin: 20px auto 0;
+    /* Legger til avstand rundt knappen og sentrerer den */
     padding: 10px 20px;
     font-size: 16px;
     background-color: #0067c4;
     color: #fff;
     border: none;
-    border-radius: 6px; /* Lett avrundede kanter for moderne utseende */
+    border-radius: 6px;
+    /* Lett avrundede kanter for moderne utseende */
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s; /* Glatte overganger for hovring */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Glatte overganger for hovring */
 }
 
 .popup button:hover {
-    background-color: #0056b3; /* Mørkere nyanse ved hovring */
-    transform: scale(1.05); /* Lett zoom-effekt */
+    background-color: #0056b3;
+    /* Mørkere nyanse ved hovring */
+    transform: scale(1.05);
+    /* Lett zoom-effekt */
 }
 
 .popup button:active {
-    background-color: #004085; /* Enda mørkere ved klikk */
-    transform: scale(0.95); /* Lett zoom-ut effekt */
+    background-color: #004085;
+    /* Enda mørkere ved klikk */
+    transform: scale(0.95);
+    /* Lett zoom-ut effekt */
 }
 
 #bestScoreBox {
-    display: none; /* Skjult som standard */
+    display: none;
+    /* Skjult som standard */
     margin-top: 20px;
     padding: 10px;
     border-radius: 6px;
     background-color: #dbe6ec;
     text-align: center;
     max-width: 500px;
-    margin: 10px auto; /* Sentrerer boksen horisontalt */
-    font-size: 16px; /* Justerer tekststørrelsen for lesbarhet */
+    margin: 10px auto;
+    /* Sentrerer boksen horisontalt */
+    font-size: 16px;
+    /* Justerer tekststørrelsen for lesbarhet */
+}
+
+
+#upload-ikon{
+    margin-left: 12px;
+}
+
+#download-ikon{
+    margin-right: 12px;
+}
+
+/*Feil meldinger style*/
+
+.error-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    font-size: 18px;
+    margin-top: 10px;
+    font-weight: bold;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.error-message i {
+    margin-right: 8px;
+    color: red;
 }
