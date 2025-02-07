@@ -50,8 +50,9 @@ body {
 
 /* Style tabellen og ny spiller-knapp */
 .table {
-    width: 100%;
+    width: 50%;
     border-collapse: collapse;
+    margin: 0 auto;
 }
 
 .table th,
@@ -72,26 +73,25 @@ body {
     height: 50px;
 }
 
+.addPlayer {
+    position: relative;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+/* 
 #addPlayer {
-    background-color: #dbe6ec; /* Matcher header-bakgrunn */
-    border-radius: 2px;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
-    width: 100%; /* Full bredde for å matche Navn-kolonnen */
-    max-width: 25.6%; /* Juster for å matche den faktiske bredden til Navn-kolonnen */
-    margin-bottom: 40px;
-    margin-top: -14.9px;
-    margin-left: 0;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border: none;
-    height: 50px;
+    border-radius: 4px;
+    /* Juster for en avrundet knapp om ønskelig */
 }
 
 #addPlayer:hover {
     background-color: #fff;
-}
+} */
 
 /* Style lagre-knapp */
 #lagreButton {
