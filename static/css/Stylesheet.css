@@ -84,9 +84,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    /* Full bredde for å matche Navn-kolonnen */
-    max-width: 25.6%;
-    /* Juster for å matche den faktiske bredden til Navn-kolonnen */
+    max-width: 50%;
     margin-bottom: 40px;
     margin-top: 25px;
     margin-left: 0;
@@ -95,7 +93,6 @@ body {
     border: none;
     height: 50px;
     border-radius: 4px;
-    /* Juster for en avrundet knapp om ønskelig */
     background-color: transparent;
 }
 
@@ -113,13 +110,11 @@ body {
     background-color: #393c61;
     width: 100%;
     bottom: 0;
-    padding: 10px;
     position: relative;
     margin-top: 12%;
     display: flex;
     justify-content: center;
     position: relative;
-    z-index: 1;
 }
 
 .footer-text {
@@ -130,7 +125,7 @@ body {
 
 .btn-group {
     display: flex;
-    overflow: ;
+    overflow: auto;
     width: 300px;
     margin: 0 auto;
     margin-bottom: 30px;
