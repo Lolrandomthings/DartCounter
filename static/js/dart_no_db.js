@@ -1,192 +1,187 @@
-// Venter HTML-dokumentet er fullstendig lastet og kjører deretter setupEventListeners
-document.addEventListener("DOMContentLoaded", setupEventListeners);// Dette sikrer at alle event listeners blir satt opp etter at DOM-en er tilgjengelig
+// Når hele HTML-dokumentet er lastet, start oppsett av event listeners
+document.addEventListener("DOMContentLoaded", setupEventListeners);
 
-// Setter opp event listeners for forskjellige brukerhandlinger
 function setupEventListeners() {
-    document.getElementById("uploadCSV")?.addEventListener("change", handleFileUpload); // Når en fil lastes opp
-    document.getElementById("downloadCSVButton")?.addEventListener("click", downloadXLSX); // Når brukeren vil laste ned tabellen
-    document.getElementById("nyTavleButton")?.addEventListener("click", resetTableForNewRound); // Tilbakestill tabellen for en ny runde
-    document.getElementById("addPlayer")?.addEventListener("click", addNewPlayer); // Legg til ny spiller
-    document.getElementById("lagreButton")?.addEventListener("click", saveTableData); // Lagre tabellens data
+  // Legger til event-lyttere for diverse knapper og inputfelt
+  document.getElementById("uploadCSV")?.addEventListener("change", handleFileUpload);
+  document.getElementById("downloadCSVButton")?.addEventListener("click", downloadXLSX);
+  document.getElementById("nyTavleButton")?.addEventListener("click", resetTableForNewRound);
+  document.getElementById("addPlayer")?.addEventListener("click", addNewPlayer);
+  document.getElementById("lagreButton")?.addEventListener("click", saveTableData);
 }
 
-// Håndterer opplastning av en Excel-fil
+// Funksjon for å håndtere opplastning av en Excel-fil
 function handleFileUpload(event) {
-    let file = event.target.files[0]; // Henter den valgte filen
-    if (!file?.name.endsWith(".xlsx")) {// Sjekker om det er en Excel-fil
-        showMessage("Ugyldig filtype, vennligst last opp en .xlsx fil");
-        return;
-    } else {
-        console.log("klarte å laste opp excel filen ")
-    }
+  const file = event.target.files[0]; // Henter den valgte filen
+  if (!file?.name.endsWith(".xlsx")) {
+    showMessage("Ugyldig filtype, vennligst last opp en .xlsx fil");
+    return;
+  }
+  console.log("Excel-fil lastet opp");
 
-    let reader = new FileReader(); // Oppretter en FileReader for å lese filen
-    reader.onload = (e) => processXLSXData(e.target.result); // Behandler data når lesing er fullført
-    reader.readAsArrayBuffer(file); // Leser filen som en array buffer
+  const reader = new FileReader(); // Oppretter en FileReader
+  reader.onload = (e) => processXLSXData(e.target.result);
+  reader.readAsArrayBuffer(file); // Leser filen som array buffer
 }
 
-// Behandler data fra den opplastede XLSX-filen
+// Behandler Excel-data og fyller tabellen med innhold
 function processXLSXData(arrayBuffer) {
-    try {
-        let jsonData = convertXLSXToJson(arrayBuffer); // Konverterer Excel-data til JSON
-        if (!jsonData?.length) return console.error("Filen er tom eller ugyldig.");
-
-        let headers = jsonData[0]; // Henter kolonneoverskriftene
-        let dateColumns = headers.slice(-2); // Antar at de to siste kolonnene er datoer
-
-        if (dateColumns.length < 2) return console.error("Fant ikke nok dato-kolonner.");
-
-        updateTableHeaders(dateColumns); // Oppdaterer tabelloverskriftene
-        populateTable(jsonData, headers, dateColumns); // Fyller tabellen med data
-    } catch (error) {
-        console.error("Feil ved analyse av XLSX-fil:", error);
+  try {
+    const jsonData = convertXLSXToJson(arrayBuffer); // Konverterer Excel til JSON
+    if (!jsonData?.length) {
+      console.error("Filen er tom eller ugyldig.");
+      return;
     }
+    const headers = jsonData[0]; // Første rad er overskrifter
+    const dateColumns = headers.slice(-2); // Antar de to siste er datoer
+    if (dateColumns.length < 2) {
+      console.error("Fant ikke nok dato-kolonner.");
+      return;
+    }
+    updateTableHeaders(dateColumns); // Oppdaterer overskrifter
+    populateTable(jsonData, headers, dateColumns); // Fyller tabellen med data
+  } catch (error) {
+    console.error("Feil ved analyse av XLSX-fil:", error);
+  }
 }
 
-// Konverterer XLSX-fil til JSON-format
+// Konverterer en XLSX-fil til JSON-format ved hjelp av SheetJS (XLSX)
 function convertXLSXToJson(arrayBuffer) {
-    let workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-        cellDates: true // Eventuelt: Behandler dato-celler som JavaScript Date-objekter, så de blir MM/DD/ÅÅ
-    });
-    // raw: false bruker celleformatering slik at overskrifter som er datoer returneres som strings
-    return XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, raw: false });
+  const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+    type: "array",
+    cellDates: true // Konverterer datoer til JS Date-objekter
+  });
+  return XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {
+    header: 1,
+    raw: false // Bruker celleformatering slik at datoer blir til tekst
+  });
 }
 
-
-// Oppdaterer tabellens overskrifter basert på dato-kolonner fra den importerte filen
+// Oppdaterer overskriftene i tabellen med datoene fra filen
 function updateTableHeaders(dateColumns) {
-    let headers = document.querySelectorAll("thead th"); // Henter alle overskrifter i tabellen
-    if (headers.length > 2) { // Sikrer at det finnes minst tre kolonner før oppdatering
-        headers[1].textContent = dateColumns[0]; // Setter første dato-kolonne i andre overskrift
-        headers[2].textContent = dateColumns[1]; // Setter andre dato-kolonne i tredje overskrift
-    }
+  const headers = document.querySelectorAll("thead th");
+  if (headers.length > 2) {
+    headers[1].textContent = dateColumns[0];
+    headers[2].textContent = dateColumns[1];
+  }
 }
 
-// Fyller tabellen med data fra XLSX-filen
+// Fyller tabellen med data fra Excel-filen
 function populateTable(jsonData, headers, dateColumns) {
-    let tableBody = document.querySelector("tbody"); // Henter tabellens body (innhold)
-    tableBody.innerHTML = ""; // Fjerner eksisterende innhold for å unngå duplikater
-
-    jsonData.slice(1).forEach(row => { // Starter fra andre rad (første rad er overskrifter)
-        let name = row[0]?.trim() || ""; // Henter navnet på spilleren fra første kolonne
-        if (!name) return console.warn("Hopper over tom rad."); // Hvis ingen navn, hopp over raden
-
-        let prevTotal1 = row[headers.indexOf(dateColumns[0])] || 0; // Henter tidligere sum for første dato
-        let prevTotal2 = row[headers.indexOf(dateColumns[1])] || 0; // Henter tidligere sum for andre dato
-
-        tableBody.appendChild(createRow(name, prevTotal1, prevTotal2)); // Oppretter og legger til ny rad
-    });
+  const tableBody = document.querySelector("tbody");
+  tableBody.innerHTML = ""; // Tømmer eksisterende innhold
+  // Hopper over den første raden (overskrifter) og oppretter rader for resten
+  jsonData.slice(1).forEach(row => {
+    const name = row[0]?.trim() || "";
+    if (!name) {
+      console.warn("Hopper over tom rad.");
+      return;
+    }
+    const prevTotal1 = row[headers.indexOf(dateColumns[0])] || 0;
+    const prevTotal2 = row[headers.indexOf(dateColumns[1])] || 0;
+    tableBody.appendChild(createRow(name, prevTotal1, prevTotal2));
+  });
 }
 
-// Oppretter en ny rad i tabellen for en spiller
+// Oppretter en ny rad med standardverdier og plasserer placeholder-tekster
 function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
-    let row = document.createElement("tr"); // Lager en ny rad (tr-element)
-    row.innerHTML = `
-        <th contenteditable="" class="editable" data-placeholder="Legg til et navn">${name}</th> <!-- Navn på spilleren -->
-        <td>${prevTotal1}</td> <!-- Tidligere sum for første dato -->
-        <td>${prevTotal2}</td> <!-- Tidligere sum for andre dato -->
-        <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td> <!-- Kast 1 -->
-        <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td> <!-- Kast 2 -->
-        <td class="row-total">0</td> <!-- Beregnet totalsum med bonus -->
-    `;
-    return row;
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <th contenteditable="" class="editable" data-placeholder="Legg til et navn">${name}</th>
+    <td>${prevTotal1}</td>
+    <td>${prevTotal2}</td>
+    <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td>
+    <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td>
+    <td class="row-total">0</td>
+  `;
+  return row;
 }
 
-
-// Tilbakestiller tabellen for en ny runde
+// Nullstiller tabellen for en ny runde (resetter poeng)
 function resetTableForNewRound() {
-    document.querySelectorAll("tbody tr").forEach(row => {
-        row.querySelectorAll("td")[0].textContent = "0";
-        row.querySelectorAll("td")[1].textContent = "0";
-        row.querySelector(".row-total").textContent = "";
-    });
-    updateTotalSum();
+  document.querySelectorAll("tbody tr").forEach(row => {
+    // Setter alle score-celler til "0" og tømmer total-cellen
+    row.querySelectorAll("td")[0].textContent = "0";
+    row.querySelectorAll("td")[1].textContent = "0";
+    row.querySelector(".row-total").textContent = "";
+  });
+  updateTotalSum();
 }
 
-// Legger til en ny spiller i tabellen
+// Legger til en ny spiller ved å opprette en ny rad
 function addNewPlayer() {
-    document.querySelector("tbody").appendChild(createRow());
+  document.querySelector("tbody").appendChild(createRow());
 }
 
-// Oppdaterer total sum for hver rad
+// Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus)
+// Bonus gis dersom en spiller har skrevet noe i minst ett av kast-cells
 function updateTotalSum() {
-    document.querySelectorAll("tr").forEach(row => {
-        let totalCell = row.querySelector(".row-total");
-        if (!totalCell) {
-            return; // Hopper over raden hvis den ikke har en totalcelle
-        }
+  document.querySelectorAll("tbody tr").forEach(row => {
+    const totalCell = row.querySelector(".row-total");
+    if (!totalCell) return;
+    const cells = row.querySelectorAll(".dart-kast");
 
-        let cells = row.querySelectorAll(".dart-kast"); // Velger kun kolonner med kastverdier
-        let throw1 = parseInt(cells[0]?.textContent) || 0;
-        let throw2 = parseInt(cells[1]?.textContent) || 0;
+    // Henter og trimmer tekst fra kast-cells
+    const throw1Text = cells[0]?.textContent.trim();
+    const throw2Text = cells[1]?.textContent.trim();
 
-        totalCell.textContent = throw1 + throw2 + 2; // Legger til 2 poeng bonus
-    });
+    // Konverterer til tall, blir 0 hvis tomt eller ugyldig
+    const throw1 = parseInt(throw1Text) || 0;
+    const throw2 = parseInt(throw2Text) || 0;
+
+    // Hvis brukeren har skrevet noe (selv "0") i minst ett felt, gi bonus på 2 poeng
+    const bonus = (throw1Text !== "" || throw2Text !== "") ? 2 : 0;
+
+    totalCell.textContent = throw1 + throw2 + bonus;
+  });
 }
 
 // Laster ned tabellen som en Excel-fil
 function downloadXLSX() {
-    let table = document.querySelector(".table");
-    let data = Array.from(table.querySelectorAll("tr")).map(row =>
-        Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
-    );
-
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Dart Table");
-    XLSX.writeFile(wb, "dart_table.xlsx");
+  const table = document.querySelector(".table");
+  const data = Array.from(table.querySelectorAll("tr")).map(row =>
+    Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
+  );
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Dart Table");
+  XLSX.writeFile(wb, "dart_table.xlsx");
 }
 
-// Lagrer tabellens data (kan utvides med mer lagringslogikk)
+// Lagrer tabellens data ved å oppdatere totalsummen og vise vinneren
 function saveTableData() {
-    updateTotalSum();
-    console.log("Lagrer data og oppdaterer total sum for kast 1 og kast 2");
-    displayWinner();
+  updateTotalSum();
+  console.log("Lagrer data og oppdaterer total sum for kast 1 og kast 2");
+  displayWinner();
 }
 
+// Viser en feilmelding (brukes ved feil ved filopplasting)
 function showMessage(message) {
-    let messageElement = document.getElementById("global-error");
-    let textElement = document.getElementById("error-text");
-
-    if (textElement) {
-        textElement.textContent = message; // Update only the text
-    }
-
-    messageElement.style.display = "flex"; // Show the message
+  const messageElement = document.getElementById("global-error");
+  const textElement = document.getElementById("error-text");
+  if (textElement) {
+    textElement.textContent = message;
+  }
+  messageElement.style.display = "flex";
 }
 
+// Kalkulerer og viser hvem som har høyest poengsum
 function displayWinner() {
-    // Get the winner display element
-    const winnerDisplay = document.getElementById("winnerDisplay");
-    if (!winnerDisplay) {
-        console.error("Element with ID 'winnerDisplay' not found.");
-        return;
+  const winnerDisplay = document.getElementById("winnerDisplay");
+  if (!winnerDisplay) {
+    console.error("Element med ID 'winnerDisplay' finnes ikke.");
+    return;
+  }
+  const rows = document.querySelectorAll("tbody tr");
+  let highestScore = 0;
+  let winnerName = "Ingen spillere";
+  rows.forEach(row => {
+    const name = row.querySelector("th")?.textContent.trim();
+    const score = parseInt(row.querySelector(".row-total")?.textContent) || 0;
+    if (score > highestScore) {
+      highestScore = score;
+      winnerName = name;
     }
-    
-    // Get all player rows from the table
-    const rows = document.querySelectorAll("tbody tr");
-    let highestScore = 0;
-    let winnerName = "No players yet";
-
-    // Loop through each row and determine the highest score
-    rows.forEach(row => {
-        const name = row.querySelector("th")?.textContent.trim();
-        const score = parseInt(row.querySelector(".row-total")?.textContent) || 0;
-        if (score > highestScore) {
-            highestScore = score;
-            winnerName = name;
-        }
-    });
-
-    // Update the winner display's text content
-    winnerDisplay.textContent = `🏆 Winner: ${winnerName} with ${highestScore} points!`;
-
-    // Remove the hidden class to show the winner display
-    winnerDisplay.classList.remove("hidden");
+  });
+  winnerDisplay.textContent = `Vinner er ${winnerName} med ${highestScore} poenger!`;
+  winnerDisplay.classList.remove("hidden");
 }
-
-
-
-
-
-
