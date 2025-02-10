@@ -83,7 +83,7 @@ function populateTable(jsonData, headers, dateColumns) {
 function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
     let row = document.createElement("tr"); // Lager en ny rad (tr-element)
     row.innerHTML = `
-        <th contenteditable="">${name}</th> <!-- Navn på spilleren -->
+        <th contenteditable="" class="editable" data-placeholder="Legg til et navn">${name}</th> <!-- Navn på spilleren -->
         <td>${prevTotal1}</td> <!-- Tidligere sum for første dato -->
         <td>${prevTotal2}</td> <!-- Tidligere sum for andre dato -->
         <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td> <!-- Kast 1 -->
