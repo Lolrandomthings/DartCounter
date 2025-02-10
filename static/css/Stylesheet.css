@@ -80,20 +80,15 @@ body {
 
 .addPlayer {
     position: relative;
-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-
-#addPlayer {
     width: 100%;
     /* Full bredde for å matche Navn-kolonnen */
     max-width: 25.6%;
     /* Juster for å matche den faktiske bredden til Navn-kolonnen */
     margin-bottom: 40px;
-    margin-top: -14.9px;
+    margin-top: 25px;
     margin-left: 0;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -101,32 +96,11 @@ body {
     height: 50px;
     border-radius: 4px;
     /* Juster for en avrundet knapp om ønskelig */
-
+    background-color: transparent;
 }
 
 #addPlayer:hover {
     background-color: #fff;
-}
-
-
-
-/* Style lagre-knapp */
-#lagreButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px;
-    /* Juster for en avrundet knapp om ønskelig */
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 250px;
-    height: 50px;
-    color: white;
-    text-align: center;
-    border: none;
-    cursor: pointer;
 }
 
 #lagre-knapp {
@@ -156,11 +130,11 @@ body {
 
 .btn-group {
     display: flex;
-    border-radius: 2px;
-    overflow: hidden;
+    overflow: ;
     width: 300px;
     margin: 0 auto;
     margin-bottom: 30px;
+    float: middle;
 }
 
 .parent-container {
