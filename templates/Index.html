@@ -49,28 +49,23 @@
                 <tbody>
                     <tr id="poenger-rad1">
                         <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
-                        <td contenteditable="" class="editable" data-placeholder="legg total til en forrige runde ">
-                        </td>
-                        <td contenteditable="" class="editable" data-placeholder="legg total til en forrige runde ">
-                        </td>
-                        <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td>
-                        <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td>
-                        <td class="row-total">0</td>
+                        <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                        <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                        <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
+                        <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
+                        <td class="row-total"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup" id="popup">
-            <span class="close" id="closePopup">&times;</span>
-            <div class="popup-content">
-                <p id="alertMessage">Plassholder tekst</p>
-                <button onclick="closePopupFunc()">Fortsett å spille</button>
-            </div>
-        </div>
+    <div id="global-error" class="error-message" style="display: none;">
+        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
+
+        <span id="error-text"></span>
     </div>
+
 
     <!-- Ny Spiller-knapp justert til tabellkolonne -->
     <button class="addPlayer" id="addPlayer"><i class="icon-plus icon-md"></i> Ny Spiller</button>
@@ -89,11 +84,7 @@
         <span id="fileStatus" style="display: none;">Ingen fil valgt</span>
     </div>
 
-    <div id="global-error" class="error-message" style="display: none;">
-        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
 
-        <span id="error-text"></span>
-    </div>
 
 
 
