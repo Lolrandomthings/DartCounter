@@ -88,11 +88,11 @@ function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
   const row = document.createElement("tr");
   row.innerHTML = `
     <th contenteditable="" class="editable" data-placeholder="Legg til et navn">${name}</th>
-    <td>${prevTotal1}</td>
-    <td>${prevTotal2}</td>
-    <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td>
-    <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td>
-    <td class="row-total">0</td>
+    <td contenteditable="" class="editable" data-placeholder="">${prevTotal1}</td>
+    <td contenteditable="" class="editable" data-placeholder="">${prevTotal2}</td>
+    <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
+    <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
+    <td class="row-total"></td>
   `;
   return row;
 }
