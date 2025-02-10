@@ -17,8 +17,7 @@ function handleFileUpload(event) {
         showMessage("Ugyldig filtype, vennligst last opp en .xlsx fil");
         return;
     } else {
-        // Clear any previous error message if the file is valid.
-        showMessage("uploadCSV", "");
+        console.log("klarte å laste opp excel filen ")
     }
 
     let reader = new FileReader(); // Oppretter en FileReader for å lese filen
@@ -89,7 +88,7 @@ function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
         <td>${prevTotal2}</td> <!-- Tidligere sum for andre dato -->
         <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td> <!-- Kast 1 -->
         <td contenteditable="" class="editable dart-kast" data-placeholder="0"></td> <!-- Kast 2 -->
-        <td class="row-total">2</td> <!-- Beregnet totalsum med bonus -->
+        <td class="row-total">0</td> <!-- Beregnet totalsum med bonus -->
     `;
     return row;
 }
@@ -142,6 +141,7 @@ function downloadXLSX() {
 function saveTableData() {
     updateTotalSum();
     console.log("Lagrer data og oppdaterer total sum for kast 1 og kast 2");
+    displayWinner();
 }
 
 function showMessage(message) {
@@ -154,3 +154,39 @@ function showMessage(message) {
 
     messageElement.style.display = "flex"; // Show the message
 }
+
+function displayWinner() {
+    // Get the winner display element
+    const winnerDisplay = document.getElementById("winnerDisplay");
+    if (!winnerDisplay) {
+        console.error("Element with ID 'winnerDisplay' not found.");
+        return;
+    }
+    
+    // Get all player rows from the table
+    const rows = document.querySelectorAll("tbody tr");
+    let highestScore = 0;
+    let winnerName = "No players yet";
+
+    // Loop through each row and determine the highest score
+    rows.forEach(row => {
+        const name = row.querySelector("th")?.textContent.trim();
+        const score = parseInt(row.querySelector(".row-total")?.textContent) || 0;
+        if (score > highestScore) {
+            highestScore = score;
+            winnerName = name;
+        }
+    });
+
+    // Update the winner display's text content
+    winnerDisplay.textContent = `🏆 Winner: ${winnerName} with ${highestScore} points!`;
+
+    // Remove the hidden class to show the winner display
+    winnerDisplay.classList.remove("hidden");
+}
+
+
+
+
+
+

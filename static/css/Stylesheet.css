@@ -80,23 +80,14 @@ body {
 
 .addPlayer {
     position: relative;
-    
+
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-/* 
+
+
 #addPlayer {
-<<<<<<< HEAD
-    background-color: #dbe6ec;
-    /* Matcher header-bakgrunn */
-    border-radius: 2px;
-=======
->>>>>>> 7dfe013efd698ec0e91799d34fa9537a88476f32
-    display: flex;
-    justify-content: center;
-    align-items: center;
-<<<<<<< HEAD
     width: 100%;
     /* Full bredde for å matche Navn-kolonnen */
     max-width: 25.6%;
@@ -108,15 +99,16 @@ body {
     transition: background-color 0.2s;
     border: none;
     height: 50px;
-=======
     border-radius: 4px;
     /* Juster for en avrundet knapp om ønskelig */
->>>>>>> 7dfe013efd698ec0e91799d34fa9537a88476f32
+
 }
 
 #addPlayer:hover {
     background-color: #fff;
-} */
+}
+
+
 
 /* Style lagre-knapp */
 #lagreButton {
@@ -152,6 +144,8 @@ body {
     margin-top: 12%;
     display: flex;
     justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
 .footer-text {
@@ -357,11 +351,11 @@ body {
 }
 
 
-#upload-ikon{
+#upload-ikon {
     margin-left: 12px;
 }
 
-#download-ikon{
+#download-ikon {
     margin-right: 12px;
 }
 
@@ -382,4 +376,24 @@ body {
 .error-message i {
     margin-right: 8px;
     color: red;
+}
+
+/* vinneren styling */
+
+.hidden {
+    display: none;
+}
+
+
+.winner-box {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px auto;
+    width: fit-content;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
