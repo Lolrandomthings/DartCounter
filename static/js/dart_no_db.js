@@ -21,9 +21,8 @@ function handleFileUpload(event) {
 
     const reader = new FileReader(); // Oppretter en FileReader
     reader.onload = (e) => processXLSXData(e.target.result);
-    reader.readAsArrayBuffer(file); // Leser filen som array buffer
     reader.onerror = () => showMessage("Feil ved lesing av filen. Prøv en annen fil."); //Hvis render blir ikke trigget 
-
+    reader.readAsArrayBuffer(file); // Leser filen som array buffer
 }
 
 // Behandler Excel-data og fyller tabellen med innhold
@@ -31,14 +30,13 @@ function processXLSXData(arrayBuffer) {
     try {
         const jsonData = convertXLSXToJson(arrayBuffer); // Konverterer Excel til JSON
         if (!jsonData || jsonData.length === 0) {
-            showMessage("Filen inneholder ingen data.");
+            showMessage("Filen inneholder ingen data. Vennligst velg et annet fil.");
             return;
         }
-
         const headers = jsonData[0]; // Første rad er overskrifter
         const dateColumns = headers.slice(-2); // Antar de to siste er datoer
         if (dateColumns.length < 2) {
-            showMessage("Tabellen må inneholde minst 2 kolonner me forrige dato.");
+            showMessage("Tabellen må inneholde minst 1 kolonne med forrige dato.");
             return;
         }
         updateTableHeaders(dateColumns); // Oppdaterer overskrifter
@@ -77,7 +75,7 @@ function populateTable(jsonData, headers, dateColumns) {
     jsonData.slice(1).forEach(row => {
         const name = row[0]?.trim() || "";
         if (!name) {
-            showMessage("Hopp over tom rad, vennligst fil alle radene.");
+            console.warn("Hopper over tom rad.");
             return;
         }
         const prevTotal1 = row[headers.indexOf(dateColumns[0])] || 0;
@@ -100,6 +98,24 @@ function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
     return row;
 }
 
+function updateTotalSum() {
+    document.querySelectorAll("tbody tr").forEach(row => {
+      const totalCell = row.querySelector(".row-total");
+      if (!totalCell) return;
+      const cells = row.querySelectorAll(".dart-kast");
+  
+      const throw1Text = cells[0]?.textContent.trim();
+      const throw2Text = cells[1]?.textContent.trim();
+  
+      const throw1 = parseInt(throw1Text) || 0;
+      const throw2 = parseInt(throw2Text) || 0;
+  
+      const bonus = (throw1Text !== "" || throw2Text !== "") ? 2 : 0;
+  
+      totalCell.textContent = throw1 + throw2 + bonus;
+    });
+  }
+
 // Nullstiller tabellen for en ny runde (resetter poeng)
 function resetTableForNewRound() {
     if (document.querySelector("tbody").children.length === 0) {
@@ -108,8 +124,8 @@ function resetTableForNewRound() {
     }
     document.querySelectorAll("tbody tr").forEach(row => {
         // Setter alle score-celler til "0" og tømmer total-cellen
-        row.querySelectorAll("td")[0].textContent = "0";
-        row.querySelectorAll("td")[1].textContent = "0";
+        row.querySelectorAll("td")[0].textContent = "";
+        row.querySelectorAll("td")[1].textContent = "";
         row.querySelector(".row-total").textContent = "";
     });
     updateTotalSum();
@@ -122,7 +138,7 @@ function addNewPlayer() {
 
 // Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus)
 // Bonus gis dersom en spiller har skrevet noe i minst ett av kast-cells
-function updateTotalSum() {
+/*function updateTotalSum() {
     document.querySelectorAll("tbody tr").forEach(row => {
         const totalCell = row.querySelector(".row-total");
         if (!totalCell) return;
@@ -141,7 +157,7 @@ function updateTotalSum() {
 
         totalCell.textContent = throw1 + throw2 + bonus;
     });
-}
+}*/
 
 // Laster ned tabellen som en Excel-fil
 function downloadXLSX() {

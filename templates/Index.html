@@ -33,6 +33,15 @@
         <div id="currentDate"></div>
     </div>
 
+    <!-- Global error melding  -->
+    <div id="global-error" class="error-message" style="display: none;">
+        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
+
+        <span id="error-text"></span>
+    </div>
+
+    <br>
+
     <div class="table-container">
         <div class="table-responsive">
             <table class="table">
@@ -53,22 +62,19 @@
                         <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
                         <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
                         <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
-                        <td class="row-total"></td>
+                        <td class="row-total">0</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div id="global-error" class="error-message" style="display: none;">
-        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
-
-        <span id="error-text"></span>
-    </div>
 
 
     <!-- Ny Spiller-knapp justert til tabellkolonne -->
     <button class="addPlayer" id="addPlayer"><i class="icon-plus icon-md"></i> Ny Spiller</button>
+
+
 
     <div id="bestScoreBox" style="display: none; margin-top: 10px; font-weight: bold;"></div>
 
