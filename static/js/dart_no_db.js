@@ -10,8 +10,10 @@ function setupEventListeners() {
     document.getElementById("lagreButton")?.addEventListener("click", saveTableData);
 }
 
+//Funksjoner for filhåndtering og Excel-behandling
 // Funksjon for å håndtere opplastning av en Excel-fil
 function handleFileUpload(event) {
+    hideWinnerBox(); // Skjul vinnerboksen for ethvert nytt filvalg
     const file = event.target.files[0]; // Henter den valgte filen
     if (!file?.name.endsWith(".xlsx")) {
         showMessage("Ingen fil valgt. Vennligst velg en gyldig .xlsx-fil.");
@@ -43,6 +45,8 @@ function processXLSXData(arrayBuffer) {
         populateTable(jsonData, headers, dateColumns); // Fyller tabellen med data
     } catch (error) {
         console.error("Feil ved analyse av XLSX-fil:", error);
+        showMessage("Feil ved analyse av XLSX-fil, vennligst prøv igjen.")
+        return;
     }
 }
 
@@ -98,66 +102,73 @@ function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
     return row;
 }
 
+// Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus)
+// Bonus gis dersom en spiller har skrevet noe i minst ett av kast-cells
 function updateTotalSum() {
     document.querySelectorAll("tbody tr").forEach(row => {
-      const totalCell = row.querySelector(".row-total");
-      if (!totalCell) return;
-      const cells = row.querySelectorAll(".dart-kast");
-  
-      const throw1Text = cells[0]?.textContent.trim();
-      const throw2Text = cells[1]?.textContent.trim();
-  
-      const throw1 = parseInt(throw1Text) || 0;
-      const throw2 = parseInt(throw2Text) || 0;
-  
-      const bonus = (throw1Text !== "" || throw2Text !== "") ? 2 : 0;
-  
-      totalCell.textContent = throw1 + throw2 + bonus;
-    });
-  }
+        const totalCell = row.querySelector(".row-total");
+        if (!totalCell) return;
+        const cells = row.querySelectorAll(".dart-kast");
+        // Konverterer til tall, blir 0 hvis tomt eller ugyldig
+        const throw1Text = cells[0]?.textContent.trim();
+        const throw2Text = cells[1]?.textContent.trim();
 
-// Nullstiller tabellen for en ny runde (resetter poeng)
+        const throw1 = parseInt(throw1Text) || 0;
+        const throw2 = parseInt(throw2Text) || 0;
+        // Hvis brukeren har skrevet noe (selv "0") i minst ett felt, gi bonus på 2 poeng
+        const bonus = (throw1Text !== "" || throw2Text !== "") ? 2 : 0;
+
+        totalCell.textContent = throw1 + throw2 + bonus;
+    });
+}
+
+// Nullstiller tabellen for en ny runde (resetter poeng for 1.kast og 2.kast)
 function resetTableForNewRound() {
-    if (document.querySelector("tbody").children.length === 0) {
+    hideWinnerBox(); // Hide the winner box for a new round
+
+    // Hent alle rader i tabellteksten
+    const rows = document.querySelectorAll("tbody tr");
+    if (rows.length === 0) {
         showMessage("Tabellen er allerede tom.");
         return;
     }
-    document.querySelectorAll("tbody tr").forEach(row => {
-        // Setter alle score-celler til "0" og tømmer total-cellen
-        row.querySelectorAll("td")[0].textContent = "";
-        row.querySelectorAll("td")[1].textContent = "";
-        row.querySelector(".row-total").textContent = "";
+
+    // Sjekk om alle dart-kast-cellene allerede er tomme.
+    let alreadyReset = true;
+    rows.forEach(row => {
+        row.querySelectorAll(".dart-kast").forEach(cell => {
+            if (cell.textContent.trim() !== "") {
+                alreadyReset = false;
+            }
+        });
     });
-    updateTotalSum();
+
+    if (alreadyReset) {
+        showMessage("Tabellen er allerede tom.");
+        return;
+    }
+
+    // Fjern dart-kast-cellene og radtotalcellen for hver rad
+    rows.forEach(row => {
+        row.querySelectorAll(".dart-kast").forEach(cell => {
+            cell.textContent = ""; // Fjern de nye rundepoengcellene
+        });
+        const rowTotal = row.querySelector(".row-total");
+        if (rowTotal) {
+            rowTotal.textContent = "";
+        }
+    });
+
+    updateTotalSum();// Beregn totaler for den nye runde
 }
+
+
 
 // Legger til en ny spiller ved å opprette en ny rad
 function addNewPlayer() {
     document.querySelector("tbody").appendChild(createRow());
 }
 
-// Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus)
-// Bonus gis dersom en spiller har skrevet noe i minst ett av kast-cells
-/*function updateTotalSum() {
-    document.querySelectorAll("tbody tr").forEach(row => {
-        const totalCell = row.querySelector(".row-total");
-        if (!totalCell) return;
-        const cells = row.querySelectorAll(".dart-kast");
-
-        // Henter og trimmer tekst fra kast-cells
-        const throw1Text = cells[0]?.textContent.trim();
-        const throw2Text = cells[1]?.textContent.trim();
-
-        // Konverterer til tall, blir 0 hvis tomt eller ugyldig
-        const throw1 = parseInt(throw1Text) || 0;
-        const throw2 = parseInt(throw2Text) || 0;
-
-        // Hvis brukeren har skrevet noe (selv "0") i minst ett felt, gi bonus på 2 poeng
-        const bonus = (throw1Text !== "" || throw2Text !== "") ? 2 : 0;
-
-        totalCell.textContent = throw1 + throw2 + bonus;
-    });
-}*/
 
 // Laster ned tabellen som en Excel-fil
 function downloadXLSX() {
@@ -166,8 +177,8 @@ function downloadXLSX() {
         Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
     );
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Dart Table");
-    XLSX.writeFile(wb, "dart_table.xlsx");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Darttavle");
+    XLSX.writeFile(wb, "Darttavle.xlsx");
 }
 
 // Lagrer tabellens data ved å oppdatere totalsummen og vise vinneren
@@ -181,6 +192,53 @@ function saveTableData() {
     console.log("Lagrer data og oppdaterer total sum for kast 1 og kast 2");
 }
 
+
+// Kalkulerer og viser hvem som har høyest poengsum
+function displayWinner() {
+    const winnerDisplay = document.getElementById("winnerDisplay");
+    const winnerBox = document.querySelector(".winner-box");
+
+    if (!winnerDisplay || !winnerBox) {
+        console.error("Element med ID 'winnerDisplay' eller '.winner-box' finnes ikke.");
+        return;
+    }
+
+    const rows = document.querySelectorAll("tbody tr");
+    let highestScore = 0;
+    let winnerName = "Ingen spillere";
+
+    rows.forEach(row => {
+        const name = row.querySelector("th")?.textContent.trim();
+        const score = parseInt(row.querySelector(".row-total")?.textContent) || 0;
+
+        if (score > highestScore) {
+            highestScore = score;
+            winnerName = name;
+        }
+    });
+
+    if (highestScore === 0) {
+        showMessage("Ingen gyldige poengsummer funnet.");
+        return;
+    }
+
+    // Update winner text
+    winnerDisplay.textContent = `Vinneren er ${winnerName} med ${highestScore} poeng!`;
+
+    // Show the winner box
+    winnerBox.style.display = "block";
+
+    console.log("displayWinner called");
+}
+
+// function for å skjule vinneren boksen etter displaying
+function hideWinnerBox() {
+    const winnerBox = document.querySelector(".winner-box");
+    if (winnerBox) {
+        winnerBox.style.display = "none";
+    }
+}
+
 // Viser en feilmelding (brukes ved feil ved filopplasting)
 function showMessage(message) {
     const messageElement = document.getElementById("global-error");
@@ -189,31 +247,5 @@ function showMessage(message) {
         textElement.textContent = message;
     }
     messageElement.style.display = "flex";
-}
-
-// Kalkulerer og viser hvem som har høyest poengsum
-function displayWinner() {
-    const winnerDisplay = document.getElementById("winnerDisplay");
-    if (!winnerDisplay) {
-        console.error("Element med ID 'winnerDisplay' finnes ikke.");
-        return;
-    }
-    const rows = document.querySelectorAll("tbody tr");
-    let highestScore = 0;
-    let winnerName = "Ingen spillere";
-
-    rows.forEach(row => {
-        const name = row.querySelector("th")?.textContent.trim();
-        const score = parseInt(row.querySelector(".row-total")?.textContent) || 0; //tar at total finnes på rad 4
-        if (score > highestScore) {
-            highestScore = score;
-            winnerName = name;
-        }
-    });
-    if (highestScore === 0) {
-        showMessage("Ingen gyldige poengsummer funnet.");
-        return;
-    }
-    winnerDisplay.textContent = `Vinneren er ${winnerName} med ${highestScore} poenger!`;
-    winnerDisplay.classList.remove("hidden");
+    hideWinnerBox(); // Skjul vinnerboksen for ethvert nytt filvalg
 }

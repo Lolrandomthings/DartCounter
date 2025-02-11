@@ -4,10 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darttavle</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../static/css/style/css/styles.min.css"> <!-- FHI stilpakke -->
-    <link rel="stylesheet" href="../static/css/Stylesheet.css"> <!-- Egen stilark -->
+    <title>Sesong oppsumering</title>
 </head>
 
 <body>
@@ -18,101 +15,56 @@
                 <h1>Reiduns Darttavle</h1>
             </div>
             <div class="links">
-                <a href="../templates/sesong_tabell.html"></a>
-                <!-- Tabellen som går til total oppsumering for sesongen tabellen -->
+                <a href="../templates/Index.html">dart</a>
             </div>
         </div>
     </div>
 
-    <div class="btn-group">
-
-        <button id="lagreButton" class="fhi-btn-primary">Lagre resultater</button>
-        <button type="button" class="btn fhi-btn-primary" id="nyTavleButton">Ny runde</button>
-
-    </div>
-
-
-    <!-- Global error melding  -->
-    <div id="global-error" class="error-message" style="display: none;">
-
-        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
-
-        <span id="error-text"></span>
-
-    </div>
-
-    <br>
-
-    <!-- Vinneren melding vises her -->
-    <div class="winner-box hidden">
-
-        <p id="winnerDisplay"></p>
-
-    </div>
-
-
-    <br>
+    <div class="vinneren-tittel" id="winnerDisplay"></div>
 
     <div class="table-container">
         <div class="table-responsive">
             <table class="table">
                 <thead>
-
                     <tr>
                         <th>Navn</th>
                         <th contenteditable="" class="editable" data-placeholder="Dato 1"></th>
                         <th contenteditable="" class="editable" data-placeholder="Dato 2"></th>
-                        <th>1. kast</th>
-                        <th>2. kast</th>
-                        <th>Totalt poeng</th>
+                        <th>Sammenlagt</th>
                     </tr>
-
                 </thead>
-
                 <tbody>
-
                     <tr id="poenger-rad1">
                         <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
                         <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
                         <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
-                        <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
-                        <td contenteditable="" class="editable dart-kast" data-placeholder=""></td>
-                        <td class="row-total">0</td>
+                        <td class="row-total"></td>
                     </tr>
-
                 </tbody>
             </table>
         </div>
     </div>
 
-
-
-    <!-- Ny Spiller-knapp justert til tabellkolonne -->
-    <button class="addPlayer" id="addPlayer"><i class="icon-plus icon-md"></i> Ny Spiller</button>
+    <div id="bestScoreBox" style="display: none; margin-top: 10px; font-weight: bold;"></div>
 
     <div class="button-container">
-
         <button id="downloadCSVButton" class="fhi-btn">Last ned excel-fil <i class="icon-download icon-sm"
                 id="download-ikon"></i></button>
 
         <label for="uploadCSV" class="fhi-btn" id="custom-file-upload">
-
             <span>Velg fil<i id="upload-ikon" class="icon-upload icon-sm" style="color: red;"></i></span>
-
         </label>
-
         <input type="file" id="uploadCSV" style="display: none;" />
 
         <span id="fileStatus" style="display: none;">Ingen fil valgt</span>
-
     </div>
 
     <div id="footer">
         <p class="footer-text">Utviklet av FHI</p>
     </div>
 
+    <script src="../static/js/dart_sesong_no_db.js"></script>
 
-    <script src="../static/js/dart_no_db.js"></script>
 
 </body>
 
