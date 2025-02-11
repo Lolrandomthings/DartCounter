@@ -100,9 +100,6 @@ body {
     background-color: #fff;
 }
 
-#lagre-knapp {
-    padding-top: 50px;
-}
 
 /* Style footer */
 #footer {
@@ -115,6 +112,8 @@ body {
     display: flex;
     justify-content: center;
     position: relative;
+    padding: 42px;
+    margin-bottom: 0%;
 }
 
 .footer-text {
@@ -130,6 +129,7 @@ body {
     margin: 0 auto;
     margin-bottom: 30px;
     float: middle;
+    overflow: hidden;
 }
 
 .parent-container {
