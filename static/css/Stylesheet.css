@@ -253,11 +253,12 @@ body {
     font-weight: bold;
     padding-top: 20px;
     padding-bottom: 10px;
+    
 }
 
 .error-message i {
     margin-right: 8px;
-    color: red;
+
 }
 
 /* vinneren styling */

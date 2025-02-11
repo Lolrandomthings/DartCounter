@@ -222,12 +222,11 @@ function displayWinner() {
         return;
     }
 
-    // Update winner text
+    // Oppdaterer vinner text
     winnerDisplay.textContent = `Vinneren er ${winnerName} med ${highestScore} poeng!`;
 
-    // Show the winner box
+    // Viser vinneren
     winnerBox.style.display = "block";
-
     console.log("displayWinner called");
 }
 
@@ -243,9 +242,15 @@ function hideWinnerBox() {
 function showMessage(message) {
     const messageElement = document.getElementById("global-error");
     const textElement = document.getElementById("error-text");
+    
     if (textElement) {
         textElement.textContent = message;
     }
+    // Display feilmeldinger
     messageElement.style.display = "flex";
-    hideWinnerBox(); // Skjul vinnerboksen for ethvert nytt filvalg
+    
+    // Skjuler feilmeldinger etter 3 sekunder 
+    setTimeout(function() {
+        messageElement.style.display = "none";
+    }, 3000);
 }
