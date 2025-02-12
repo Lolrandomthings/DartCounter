@@ -9,6 +9,7 @@ function setupEventListeners() {
     document.getElementById("lagreButton")?.addEventListener("click", saveTableData);
 }
 
+
 //Handterer opplasting av en Excel-fil (.xlsx). Skjuler eventuelle tidligere vinnervisninger og bekrefter at filen er en gyldig .xlsx.
 function handleFileUpload(event) {
     hideWinnerBox(); // Skjul vinnerboksen på nytt filvalg
@@ -25,6 +26,7 @@ function handleFileUpload(event) {
     reader.readAsArrayBuffer(file); // Les fil som en matrisebuffer.
 }
 
+
 // Behandler Excel-dataene, konverterer filen til JSON. sjekker for gyldige data, bygger sesongstatistikktabellen.
 function processXLSXData(arrayBuffer) {
     try {
@@ -34,12 +36,16 @@ function processXLSXData(arrayBuffer) {
             return;
         }
         buildSeasonTable(jsonData);
+        updateTotalSum();// Oppdater summene umiddelbart og vis vinneren:
+        displayWinner();
+
     } catch (error) {
         console.error("Feil ved analyse av XLSX-fil:", error);
         showMessage("Feil ved analyse av XLSX-fil, vennligst prøv igjen.");
         return;
     }
 }
+
 
 // Konverterer en XLSX-fil (arrayBuffer) til JSON ved hjelp av SheetJS.
 function convertXLSXToJson(arrayBuffer) {
@@ -52,6 +58,7 @@ function convertXLSXToJson(arrayBuffer) {
         raw: false // Fjern alt eksisterende innhold.
     });
 }
+
 
 // Bygger sesongstatistikktabellen. Bruker hele JSON-dataene (første rad som overskrifter, påfølgende rader som data).
 function buildSeasonTable(jsonData) {
@@ -150,43 +157,97 @@ function updateTotalSum() {
     });
 }
 
-//Tilbakestiller sesongtabellresultatene (alle celler unntatt navn og totalceller). Hvis tabellen allerede er tilbakestilt, viser den en melding.
+
+// Globalt flagg for å forhindre flere samtidige tilbakestillinger.
+let resetInProgress = false;
+
+//Nullstiller sesongtabellen til standardstrukturen. Dette fjerner alle dataene (datoer, navn, poeng) og gjenoppretter placeholder-tekstene.
+//Dersom tabellen allerede er tom, vises en feilmelding.
+ 
 function resetTableForNewRound() {
-    hideWinnerBox();
-    const rows = document.querySelectorAll("tbody tr");
-    if (rows.length === 0) {
-        showMessage("Tabellen er allerede tom.");
+    // Hvis en tilbakestilling er i gang, vis en melding og avslutt.
+    if (resetInProgress) {
+        console.log("nullstilling pågår")
         return;
     }
+    resetInProgress = true;
 
-    // Sjekk om alle poengcellene (unntatt navn og total) allerede er tomme eller null.
-    let alreadyReset = true;
-    rows.forEach(row => {
-        const cells = row.querySelectorAll("td");
-        for (let i = 1; i < cells.length - 1; i++) {
-            if (cells[i].textContent.trim() !== "" && cells[i].textContent.trim() !== "0") {
-                alreadyReset = false;
+    // Deaktiver "Ny runde"-knappen for å hindre flere klikk.
+    const resetButton = document.getElementById("nyTavleButton");
+    if (resetButton) {
+        resetButton.disabled = true;
+    }
+
+    hideWinnerBox(); // Skjul vinnerboksen
+
+    try {
+        const table = document.querySelector(".table");
+        if (!table) {
+            showMessage("Tabellen finnes ikke. Vennligst last inn siden på nytt");
+            return;
+        }
+
+        const tbody = table.querySelector("tbody");
+        if (!tbody || tbody.rows.length === 0) { // Sjekk om det ikke finnes noen data-rader
+            showMessage("Tabellen er allerede tom.");
+            return;
+        }
+
+        // Sjekk om alle score-cellene (mellom navn og total) allerede er tomme eller null
+        let alreadyReset = true;
+        Array.from(tbody.rows).forEach(row => {
+            const cells = row.querySelectorAll("td");
+            // Antar at cell[0] er navnet og den siste cellen er totalen.
+            for (let i = 1; i < cells.length - 1; i++) {
+                if (cells[i].textContent.trim() !== "" && cells[i].textContent.trim() !== "0") {
+                    alreadyReset = false;
+                }
             }
-        }
-    });
+        });
 
-    if (alreadyReset) {
-        showMessage("Tabellen er allerede tom.");
-        return;
+        if (alreadyReset) {
+            showMessage("Tabellen er allerede tom.");
+            return;
+        }
+
+        // Sett tabellens innerHTML tilbake til standardoppsettet med placeholders.
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th contenteditable="" class="editable" data-placeholder="Dato 1"></th>
+                    <th contenteditable="" class="editable" data-placeholder="Dato 2"></th>
+                    <th contenteditable="" class="editable" data-placeholder="Dato 3"></th>
+                    <th contenteditable="" class="editable" data-placeholder="Dato 4"></th>
+                    <th>Sammenlagt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="poenger-rad1">
+                    <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
+                    <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                    <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                    <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                    <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                    <td class="row-total"></td>
+                </tr>
+            </tbody>
+        `;
+
+        // Oppdater totalene etter tilbakestilling (som nå bør være tomme/0)
+        updateTotalSum();
+    } catch (error) {
+        console.error("Feil under tilbakestilling av tabellen:", error);
+        showMessage("En feil oppstod under tilbakestilling. Vennligst prøv igjen.");
+    } finally {
+        // Tilbakestill flagget og reaktiver knappen umiddelbart.
+        resetInProgress = false;
+        if (resetButton) {
+            resetButton.disabled = false;
+        }
     }
-
-    // Tilbakestill poengcellene.
-    rows.forEach(row => {
-        const cells = row.querySelectorAll("td");
-        for (let i = 1; i < cells.length - 1; i++) {
-            cells[i].textContent = "";
-        }
-        // Fjern hele cellen.
-        cells[cells.length - 1].textContent = "";
-    });
-
-    updateTotalSum();
 }
+
 
 
 // Laster ned gjeldende sesongstatistikktabell som en Excel-fil.
