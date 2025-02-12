@@ -10,6 +10,8 @@
     padding: 20px;
     top: 0;
     z-index: 1;
+    width: 100%;
+    padding: 2%;
     /* Holder headeren over tabellinnholdet */
 }
 
@@ -100,18 +102,16 @@ body {
     background-color: #fff;
 }
 
-
 /* Style footer */
 #footer {
     color: white;
     background-color: #393c61;
     width: 100%;
     bottom: 0;
-    position: relative;
+    position: fixed;
     margin-top: 12%;
     display: flex;
     justify-content: center;
-    position: relative;
     padding: 42px;
     margin-bottom: 0%;
 }
