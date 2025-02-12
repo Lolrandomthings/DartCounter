@@ -10,7 +10,7 @@ function setupEventListeners() {
   document.getElementById("lagreButton")?.addEventListener("click", saveTableData);
 }
 
- // Håndterer opplasting av en Excel-fil (.xlsx). Skjuler vinnerboksen og viser en feilmelding dersom filen ikke er gyldig.
+// Håndterer opplasting av en Excel-fil (.xlsx). Skjuler vinnerboksen og viser en feilmelding dersom filen ikke er gyldig.
 function handleFileUpload(event) {
   hideWinnerBox(); // Skjul vinnerboksen for ethvert nytt filvalg
   const file = event.target.files[0]; // Henter den valgte filen
@@ -125,42 +125,72 @@ function updateTotalSum() {
 }
 
 
-// Nullstiller tabellen for en ny runde (fjerner poeng for 1. og 2. kast). Hvis tabellen allerede er tom, vises en feilmelding.
-function resetTableForNewRound() {
-  hideWinnerBox(); // Skjul vinnerboksen for en ny runde
+// Globalt variabel for å forhindre flere samtidige tilbakestillinger for dartbordet.
+let dartResetInProgress = false;
 
-  const rows = document.querySelectorAll("tbody tr");
-  if (rows.length === 0) {
-    showMessage("Tabellen er allerede tom.");
+// Nullstiller dart-tabellen for en ny runde. Dette fjerner poeng for de cellene med klassen .dart-kast og nullstiller den siste cellen (radtotalen) 
+// for hver rad, mens navnecellen (første celle) beholdes. Dersom tabellen allerede er tom,vises en feilmelding.
+function resetTableForNewRound() {
+  // Sjekk om en tilbakestilling allerede er i gang.
+  if (dartResetInProgress) {
+    console.log("nullstilling pågår")
     return;
   }
+  dartResetInProgress = true;
 
-  // Sjekk om alle dart-kast-cellene allerede er tomme
-  let alreadyReset = true;
-  rows.forEach(row => {
-    row.querySelectorAll(".dart-kast").forEach(cell => {
-      if (cell.textContent.trim() !== "") {
-        alreadyReset = false;
+  // Deaktiver tilbakestillingsknappen for å forhindre raske klikk.
+  const resetButton = document.getElementById("nyTavleButton");
+  if (resetButton) {
+    resetButton.disabled = true;
+  }
+
+  hideWinnerBox();
+
+  try {
+    const rows = document.querySelectorAll("tbody tr");
+    if (!rows || rows.length === 0) {
+      showMessage("Tabellen er allerede tom.");
+      return;
+    }
+
+    // Sjekk om alle dart-score-celler (med klassen .dart-kast) allerede er tomme.
+    let alreadyReset = true;
+    rows.forEach(row => {
+      row.querySelectorAll(".dart-kast").forEach(cell => {
+        if (cell.textContent.trim() !== "") {
+          alreadyReset = false;
+        }
+      });
+    });
+
+    if (alreadyReset) {
+      showMessage("Tabellen er allerede tom.");
+      return;
+    }
+
+    // Fjern hver rads dart-poengceller og radtotal.
+    rows.forEach(row => {
+      row.querySelectorAll(".dart-kast").forEach(cell => {
+        cell.textContent = ""; // Slett poengcelle.
+      });
+      const rowTotal = row.querySelector(".row-total");
+      if (rowTotal) {
+        rowTotal.textContent = ""; // Clear the total cell.
       }
     });
-  });
-  if (alreadyReset) {
-    showMessage("Tabellen er allerede tom.");
-    return;
-  }
 
-  // Nullstill dart-kast-cellene og radtotalcellen for hver rad
-  rows.forEach(row => {
-    row.querySelectorAll(".dart-kast").forEach(cell => {
-      cell.textContent = ""; // Nullstill nye rundepoeng
-    });
-    const rowTotal = row.querySelector(".row-total");
-    if (rowTotal) {
-      rowTotal.textContent = "";
+    // Beregn totaler på nytt (som nå skal være tomme/0)
+    updateTotalSum();
+  } catch (error) {
+    console.error("Feil under tilbakestilling av dart-tabellen:", error);
+    showMessage("En feil oppstod under tilbakestilling. Vennligst prøv igjen.");
+  } finally {
+    // Aktiver tilbakestillingsknappen på nytt.
+    dartResetInProgress = false;
+    if (resetButton) {
+      resetButton.disabled = false;
     }
-  });
-
-  updateTotalSum(); // Oppdater totalene etter nullstilling
+  }
 }
 
 
@@ -182,7 +212,7 @@ function downloadXLSX() {
 }
 
 
- // Lagrer tabellens data ved å oppdatere totalsummen og vise vinneren.
+// Lagrer tabellens data ved å oppdatere totalsummen og vise vinneren.
 function saveTableData() {
   if (!document.querySelector("tbody tr")) {
     showMessage("Kan ikke lagre data. Det er Ingen spillere i tabellen.");
@@ -194,8 +224,8 @@ function saveTableData() {
 }
 
 
- // Kalkulerer og viser hvem som har høyest poengsum.
- // Viser en feilmelding dersom ingen gyldige poengsummer er funnet.
+// Kalkulerer og viser hvem som har høyest poengsum.
+// Viser en feilmelding dersom ingen gyldige poengsummer er funnet.
 function displayWinner() {
   const winnerDisplay = document.getElementById("winnerDisplay");
   const winnerBox = document.querySelector(".winner-box");
@@ -230,8 +260,8 @@ function displayWinner() {
 }
 
 
- 
- // Skjuler vinnerboksen.
+
+// Skjuler vinnerboksen.
 function hideWinnerBox() {
   const winnerBox = document.querySelector(".winner-box");
   if (winnerBox) {
@@ -243,15 +273,15 @@ function hideWinnerBox() {
 function showMessage(message) {
   const messageElement = document.getElementById("global-error");
   const textElement = document.getElementById("error-text");
-  
+
   if (textElement) {
     textElement.textContent = message;
   }
   // Vis feilmeldingen
   messageElement.style.display = "flex";
-  
+
   // Skjul feilmeldingen etter 3 sekunder
-  setTimeout(function() {
+  setTimeout(function () {
     messageElement.style.display = "none";
   }, 3000);
 }
