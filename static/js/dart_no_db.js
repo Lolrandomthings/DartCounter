@@ -2,7 +2,6 @@
 document.addEventListener("DOMContentLoaded", setupEventListeners);
 
 // Legger til event-lyttere for diverse knapper og inputfelt.
- 
 function setupEventListeners() {
   document.getElementById("uploadCSV")?.addEventListener("change", handleFileUpload);
   document.getElementById("downloadCSVButton")?.addEventListener("click", downloadXLSX);
@@ -10,9 +9,6 @@ function setupEventListeners() {
   document.getElementById("addPlayer")?.addEventListener("click", addNewPlayer);
   document.getElementById("lagreButton")?.addEventListener("click", saveTableData);
 }
-
-
-
 
  // Håndterer opplasting av en Excel-fil (.xlsx). Skjuler vinnerboksen og viser en feilmelding dersom filen ikke er gyldig.
 function handleFileUpload(event) {
@@ -31,7 +27,6 @@ function handleFileUpload(event) {
 }
 
 // Behandler Excel-data og fyller tabellen med innhold. Konverterer data til JSON, sjekker gyldigheten og kaller oppdateringsfunksjoner.
- 
 function processXLSXData(arrayBuffer) {
   try {
     const jsonData = convertXLSXToJson(arrayBuffer); // Konverterer Excel til JSON
@@ -55,7 +50,6 @@ function processXLSXData(arrayBuffer) {
 }
 
 // Konverterer en XLSX-fil til JSON-format ved hjelp av SheetJS (XLSX).
- 
 function convertXLSXToJson(arrayBuffer) {
   const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
     type: "array",
@@ -68,7 +62,6 @@ function convertXLSXToJson(arrayBuffer) {
 }
 
 // Oppdaterer overskriftene i tabellen med datoene fra filen.
- 
 function updateTableHeaders(dateColumns) {
   const headers = document.querySelectorAll("thead th");
   if (headers.length > 2) {
@@ -94,7 +87,6 @@ function populateTable(jsonData, headers, dateColumns) {
 }
 
 //Oppretter en ny rad med standardverdier og placeholder-tekster.
-
 function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
   const row = document.createElement("tr");
   row.innerHTML = `
@@ -111,7 +103,6 @@ function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
 
 
 // Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus). Bonus gis dersom en spiller har skrevet noe (selv "0") i minst ett felt.
- 
 function updateTotalSum() {
   document.querySelectorAll("tbody tr").forEach(row => {
     const totalCell = row.querySelector(".row-total");
@@ -248,10 +239,6 @@ function hideWinnerBox() {
   }
 }
 
-
-
-
- 
 // Viser en feilmelding ved feil (f.eks. ved filopplasting). Feilmeldingen skjules automatisk etter 3 sekunder.
 function showMessage(message) {
   const messageElement = document.getElementById("global-error");

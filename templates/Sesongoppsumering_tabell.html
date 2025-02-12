@@ -5,31 +5,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sesong oppsumering</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/style/css/styles.min.css"> <!-- FHI stilpakke -->
+    <link rel="stylesheet" href="../static/css/Stylesheet.css"> <!-- Egen stilark -->
 </head>
 
 <body>
 
     <div id="header">
+
         <div class="container">
+
             <div class="tittel">
+
                 <h1>Reiduns Darttavle</h1>
+
             </div>
+
             <div class="links">
-                <a href="../templates/Index.html">dart</a>
+
+                <a href="{{ url_for('home') }}">dart</a>
+
             </div>
         </div>
+
+    </div>
+
+    <div class="btn-group">
+
+        <button id="lagreButton" class="btn fhi-btn-primary">Lagre resultater</button>
+         
+        <button type="button" class="btn fhi-btn-primary" id="nyTavleButton">Ny runde</button>
+
+    </div>
+
+    <!-- Global error melding  -->
+    <div id="global-error" class="error-message" style="display: none;">
+
+        <i class="icon-exclamation-circle-fill icon-lg" style="color: red;"></i>
+
+        <span id="error-text"></span>
+
+    </div>
+
+    <br>
+
+    <!-- Vinneren melding vises her -->
+    <div class="winner-box hidden">
+
+        <p id="winnerDisplay"></p>
+
     </div>
 
     <div class="vinneren-tittel" id="winnerDisplay"></div>
 
     <div class="table-container">
+
         <div class="table-responsive">
+
             <table class="table">
+
                 <thead>
                     <tr>
                         <th>Navn</th>
                         <th contenteditable="" class="editable" data-placeholder="Dato 1"></th>
                         <th contenteditable="" class="editable" data-placeholder="Dato 2"></th>
+                        <th contenteditable="" class="editable" data-placeholder="Dato 3"></th>
+                        <th contenteditable="" class="editable" data-placeholder="Dato 4"></th>
                         <th>Sammenlagt</th>
                     </tr>
                 </thead>
@@ -38,11 +80,17 @@
                         <th contenteditable="" class="editable" data-placeholder="Legg til et navn"></th>
                         <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
                         <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                        <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
+                        <td contenteditable="" class="editable" data-placeholder="Total til en forrige runde"></td>
                         <td class="row-total"></td>
                     </tr>
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 
     <div id="bestScoreBox" style="display: none; margin-top: 10px; font-weight: bold;"></div>
@@ -63,7 +111,7 @@
         <p class="footer-text">Utviklet av FHI</p>
     </div>
 
-    <script src="../static/js/dart_sesong_no_db.js"></script>
+    <script src="../static/js/DartTotal_no_db.js"></script>
 
 
 </body>
