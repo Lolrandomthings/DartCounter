@@ -243,25 +243,25 @@ body {
 
 /*Feil meldinger style*/
 
+
 .error-message {
-    display: flex;
     align-items: center;
     justify-content: center;
     color: red;
     font-size: 18px;
-    margin-top: 10px;
     font-weight: bold;
+    margin-top: 10px;
     padding-top: 20px;
     padding-bottom: 10px;
 }
 
+
 .error-message i {
     margin-right: 8px;
-    color: red;
+
 }
 
 /* vinneren styling */
-
 .hidden {
     display: none;
 }
