@@ -163,7 +163,7 @@ let resetInProgress = false;
 
 //Nullstiller sesongtabellen til standardstrukturen. Dette fjerner alle dataene (datoer, navn, poeng) og gjenoppretter placeholder-tekstene.
 //Dersom tabellen allerede er tom, vises en feilmelding.
- 
+
 function resetTableForNewRound() {
     // Hvis en tilbakestilling er i gang, vis en melding og avslutt.
     if (resetInProgress) {
@@ -253,6 +253,19 @@ function resetTableForNewRound() {
 // Laster ned gjeldende sesongstatistikktabell som en Excel-fil.
 function downloadXLSX() {
     const table = document.querySelector(".table");
+    if (!table) {
+        showMessage("Tabellen er ikke tilgjengelig. Vennligst last opp en fil.");
+        return;
+    }
+
+    // Check if there are any rows in the table's body.
+    const tbody = table.querySelector("tbody");
+    if (!tbody || tbody.rows.length === 0) {
+        showMessage("Tabellen er tom. Vennligst last opp en fil.");
+        return;
+    }
+
+    // If the table is not empty, proceed with the download:
     const data = Array.from(table.querySelectorAll("tr")).map(row =>
         Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
     );
@@ -260,6 +273,7 @@ function downloadXLSX() {
     XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Sesongstatistikk");
     XLSX.writeFile(wb, "Sesongstatistikk.xlsx");
 }
+
 
 
 // Lagrer sesongtabelldata ved å oppdatere totaler og vise vinneren.
