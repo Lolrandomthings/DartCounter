@@ -38,6 +38,7 @@
 a:link {
     color: white;
     text-decoration: none;
+
 }
 
 h1,
@@ -128,11 +129,10 @@ body {
 .btn-group {
     display: flex;
     overflow: auto;
-    width: 300px;
+    width: auto;
     margin: 0 auto;
     margin-bottom: 30px;
     float: middle;
-    overflow: hidden;
 }
 
 .parent-container {
