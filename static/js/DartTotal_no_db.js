@@ -48,15 +48,41 @@ function processXLSXData(arrayBuffer) {
 
 
 // Konverterer en XLSX-fil (arrayBuffer) til JSON ved hjelp av SheetJS.
-function convertXLSXToJson(arrayBuffer) {
-    const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-        type: "array",
-        cellDates: true // Konverter datoer til JavaScript Dato-objekter.
+function downloadXLSX() {
+    const table = document.querySelector(".table");
+    if (!table) {
+        showMessage("Tabellen er ikke tilgjengelig. Vennligst last opp en fil.");
+        return;
+    }
+
+    const tbody = table.querySelector("tbody");
+    if (!tbody || tbody.rows.length === 0) {
+        showMessage("Tabellen er tom. Vennligst last opp en fil.");
+        return;
+    }
+
+    // Sjekk om minst én rad har meningsfulle data i den første cellen (spillerens navn)
+    let hasData = false;
+    Array.from(tbody.rows).forEach(row => {
+        // Forutsatt at den første cellen i hver rad enten er en <th> eller en <td> som inneholder spillerens navn.
+        const nameCell = row.querySelector("th") || row.querySelector("td");
+        if (nameCell && nameCell.textContent.trim() !== "") {
+            hasData = true;
+        }
     });
-    return XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {
-        header: 1,
-        raw: false // Fjern alt eksisterende innhold.
-    });
+
+    if (!hasData) {
+        showMessage("Tabellen er tom. Vennligst last opp en fil.");
+        return;
+    }
+
+    // Hvis data finnes fortsett med å konvertere tabellen til Excel
+    const data = Array.from(table.querySelectorAll("tr")).map(row =>
+        Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
+    );
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Darttavle");
+    XLSX.writeFile(wb, "Sesongstatistikk.xlsx");
 }
 
 
@@ -140,7 +166,6 @@ function createTableRow(rowData, headers) {
     return tr;
 }
 
-
 // Oppdaterer totalen (samme tid) for hver rad. Itererer over alle rader i kroppen, beregner summen for hver rad på nytt og oppdaterer den siste cellen tilsvarende.
 function updateTotalSum() {
     const rows = document.querySelectorAll("tbody tr");
@@ -163,7 +188,6 @@ let resetInProgress = false;
 
 //Nullstiller sesongtabellen til standardstrukturen. Dette fjerner alle dataene (datoer, navn, poeng) og gjenoppretter placeholder-tekstene.
 //Dersom tabellen allerede er tom, vises en feilmelding.
-
 function resetTableForNewRound() {
     // Hvis en tilbakestilling er i gang, vis en melding og avslutt.
     if (resetInProgress) {

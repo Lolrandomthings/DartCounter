@@ -200,7 +200,6 @@ function addNewPlayer() {
 }
 
 
-// Laster ned tabellen som en Excel-fil.
 function downloadXLSX() {
   const table = document.querySelector(".table");
   if (!table) {
@@ -208,21 +207,36 @@ function downloadXLSX() {
     return;
   }
 
-  // Check if there are any rows in the table's body.
   const tbody = table.querySelector("tbody");
   if (!tbody || tbody.rows.length === 0) {
     showMessage("Tabellen er tom. Vennligst last opp en fil.");
     return;
   }
 
-  // If the table is not empty, proceed with the download:
+  // Sjekk om minst én rad har meningsfulle data i den første cellen (spillerens navn)
+  let hasData = false;
+  Array.from(tbody.rows).forEach(row => {
+    // Forutsatt at den første cellen i hver rad enten er en <th> eller en <td> som inneholder spillerens navn.
+    const nameCell = row.querySelector("th") || row.querySelector("td");
+    if (nameCell && nameCell.textContent.trim() !== "") {
+      hasData = true;
+    }
+  });
+
+  if (!hasData) {
+    showMessage("Tabellen er tom. Vennligst last opp en fil.");
+    return;
+  }
+
+  // Hvis data finnes fortsett med å konvertere tabellen til Excel
   const data = Array.from(table.querySelectorAll("tr")).map(row =>
     Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
   );
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Darttavle");
-  XLSX.writeFile(wb, "Dartavle.xlsx");
+  XLSX.writeFile(wb, "Sesongstatistikk.xlsx");
 }
+
 
 
 
