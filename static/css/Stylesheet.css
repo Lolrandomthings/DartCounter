@@ -171,24 +171,20 @@ body {
 /* Stiljusteringer for å få knappene til å se tilkoblet ut */
 #downloadCSVButton {
     border-radius: 4px 0 0 4px;
-    /* Avrundet på venstre side */
     margin-right: -1px;
-    /* Overlapp for å unngå synlig gap */
 }
 
 #custom-file-upload {
     border-radius: 0 4px 4px 0;
-    /* Avrundet på høyre side */
 }
 
 .button-container {
     display: flex;
     gap: 0;
-    /* Fjern gap mellom knappene */
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    /* Sikrer at beholderen ikke har synlige gap */
+    margin-top: 20px;
 }
 
 .fhi-btn:hover {
