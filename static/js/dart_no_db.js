@@ -203,13 +203,27 @@ function addNewPlayer() {
 // Laster ned tabellen som en Excel-fil.
 function downloadXLSX() {
   const table = document.querySelector(".table");
+  if (!table) {
+    showMessage("Tabellen er ikke tilgjengelig. Vennligst last opp en fil.");
+    return;
+  }
+
+  // Check if there are any rows in the table's body.
+  const tbody = table.querySelector("tbody");
+  if (!tbody || tbody.rows.length === 0) {
+    showMessage("Tabellen er tom. Vennligst last opp en fil.");
+    return;
+  }
+
+  // If the table is not empty, proceed with the download:
   const data = Array.from(table.querySelectorAll("tr")).map(row =>
     Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
   );
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Darttavle");
-  XLSX.writeFile(wb, "Darttavle.xlsx");
+  XLSX.writeFile(wb, "Dartavle.xlsx");
 }
+
 
 
 // Lagrer tabellens data ved å oppdatere totalsummen og vise vinneren.
