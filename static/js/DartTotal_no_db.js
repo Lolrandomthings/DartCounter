@@ -49,8 +49,6 @@ function processXLSXData(arrayBuffer) {
             return;
         }
         buildDynamicTable(jsonData);
-        updateTotalSum();
-        displayWinner();
     } catch (error) {
         console.error("Feil ved analyse av XLSX-fil:", error);
         showMessage("Feil ved analyse av XLSX-fil, vennligst prøv igjen.");
@@ -290,7 +288,7 @@ function saveTableData() {
     }
 
     if (!validateTableData()) {
-        // Hvis validering feiler, ikke kjør videre
+        // Hvis validering feiler, den ikke kjører videre
         return;
     }
     updateTotalSum();
