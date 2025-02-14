@@ -10,7 +10,7 @@ function setupEventListeners() {
 }
 
 
-// Håndterer opplasting av en Excel-fil (.xlsx). Skjuler eventuell tidligere vinnervisning og kontrollerer filtypen.
+// Håndterer opplasting av en Excel-fil (.xlsx). Skjuler vinnerboksen og viser feilmelding om filen ikke er gyldig.
 function handleFileUpload(event) {
     hideWinnerBox(); // Skjul vinnerboksen ved nytt filvalg.
     const file = event.target.files[0]; // Hent den valgte filen.
@@ -20,7 +20,7 @@ function handleFileUpload(event) {
     }
     console.log("Excel-fil lastet opp");
 
-    const reader = new FileReader(); // Opprett en FileReader.
+    const reader = new FileReader(); // Les filen som en arraybuffer.
     reader.onload = (e) => processXLSXData(e.target.result);
     reader.onerror = () => showMessage("Feil ved lesing av filen. Prøv en annen fil.");
     reader.readAsArrayBuffer(file); // Les filen som en arraybuffer.
@@ -49,8 +49,6 @@ function processXLSXData(arrayBuffer) {
             return;
         }
         buildDynamicTable(jsonData);
-        updateTotalSum();
-        displayWinner();
     } catch (error) {
         console.error("Feil ved analyse av XLSX-fil:", error);
         showMessage("Feil ved analyse av XLSX-fil, vennligst prøv igjen.");
@@ -144,40 +142,6 @@ function buildDynamicTable(jsonData) {
 
     const tbody = createTableBody(jsonData, filteredHeaders);
     table.appendChild(tbody);
-}
-
-
-
-// Laster ned den nåværende tabellen som en Excel-fil. 
-function downloadXLSX() {
-    const table = document.querySelector(".table");
-    if (!table) {
-        showMessage("Ingen tabell for å laste ned. Vennligst last opp en fil.");
-        return;
-    }
-
-    // Sjekk om tabellen har noen rader med data.
-    const tbody = table.querySelector("tbody");
-    if (!tbody || tbody.rows.length === 0) {
-        showMessage("Tabellen er tom. Vennligst last opp en fil.");
-        return;
-    }
-
-    // Hent data fra alle radene i tabellen.
-    const data = Array.from(table.querySelectorAll("tr")).map(row =>
-        Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
-    );
-
-    // Erstatt header for siste kolonne med dagens dato i formatet mm/dd/yy.
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-    if (data.length > 0 && data[0].length > 0) {
-        data[0][data[0].length - 1] = formattedDate;
-    }
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Sesongstatistikk");
-    XLSX.writeFile(wb, "Sesongstatistikk.xlsx");
 }
 
 
@@ -275,16 +239,63 @@ function resetTableForNewRound() {
     }
 }
 
+
+// Laster ned den nåværende tabellen som en Excel-fil. 
+function downloadXLSX() {
+    const table = document.querySelector(".table");
+    if (!table) {
+      showMessage("Tabellen finnes ikke. Vennligst last inn siden på nytt.");
+      return;
+    }
+  
+    // Hent alle rader i <tbody> og filtrer ut rader der den første cellen er tom.
+    const rows = table.querySelectorAll("tbody tr");
+    const validRows = Array.from(rows).filter(row => {
+      const firstCell = row.querySelector("th, td");
+      return firstCell && firstCell.textContent.trim() !== "";
+    });
+  
+    if (validRows.length === 0) {
+      showMessage("Ingen data i tabellen. Vennligst last opp en fil eller skriv inn data.");
+      return;
+    }
+  
+    // Bygg data-array for nedlasting
+    const data = Array.from(table.querySelectorAll("tr")).map(row =>
+      Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText)
+    );
+  
+    // Erstatt header for siste kolonne med dagens dato i formatet mm/dd/yy.
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-US', {
+      month: '2-digit', day: '2-digit', year: '2-digit'
+    });
+    if (data.length > 0 && data[0].length > 0) {
+      data[0][data[0].length - 1] = formattedDate;
+    }
+  
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), "Sesongstatistikk");
+    XLSX.writeFile(wb, "Sesongstatistikk.xlsx");
+  }
+  
+
 // Lagrer tabelldata ved å oppdatere totalene og vise vinneren.
 function saveTableData() {
     if (!document.querySelector("tbody tr")) {
         showMessage("Kan ikke lagre data. Det er ingen spillere i tabellen.");
         return;
     }
+
+    if (!validateTableData()) {
+        // Hvis validering feiler, den ikke kjører videre
+        return;
+    }
     updateTotalSum();
     displayWinner();
     console.log("Lagrer data og oppdaterer totalsum for sesongen.");
 }
+
 
 // Beregner og viser spilleren med høyest totalsum.
 function displayWinner() {
@@ -324,6 +335,7 @@ function displayWinner() {
     console.log("displayWinner kalt");
 }
 
+
 // Skjuler vinnerboksen.
 function hideWinnerBox() {
     const winnerBox = document.querySelector(".winner-box");
@@ -332,7 +344,8 @@ function hideWinnerBox() {
     }
 }
 
-// Viser en melding (feil eller info) i 3 sekunder.
+
+// Viser en melding  i 3 sekunder.
 function showMessage(message) {
     const messageElement = document.getElementById("global-error");
     const textElement = document.getElementById("error-text");

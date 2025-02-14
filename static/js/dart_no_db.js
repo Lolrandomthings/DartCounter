@@ -10,8 +10,7 @@ function setupEventListeners() {
   document.getElementById("lagreButton")?.addEventListener("click", saveTableData);
 }
 
-// Håndterer opplasting av en Excel-fil (.xlsx)
-// Skjuler vinnerboksen og viser feilmelding om filen ikke er gyldig
+// Håndterer opplasting av en Excel-fil (.xlsx). Skjuler vinnerboksen og viser feilmelding om filen ikke er gyldig.
 function handleFileUpload(event) {
   hideWinnerBox(); // Skjul tidligere vinnervisning
   const file = event.target.files[0];
@@ -21,11 +20,25 @@ function handleFileUpload(event) {
   }
   console.log("Excel-fil lastet opp");
 
-  const reader = new FileReader();
+  const reader = new FileReader(); // Les filen som en arraybuffer.
   reader.onload = (e) => processXLSXData(e.target.result);
   reader.onerror = () => showMessage("Feil ved lesing av filen. Prøv en annen fil.");
-  reader.readAsArrayBuffer(file);
+  reader.readAsArrayBuffer(file); // Les filen som en arraybuffer.
 }
+
+
+// Konverterer XLSX-fil (arrayBuffer) til JSON med SheetJS
+function convertXLSXToJson(arrayBuffer) {
+  const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+    type: "array",
+    cellDates: true // Konverterer datoer til JS Date-objekter
+  });
+  return XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {
+    header: 1,
+    raw: false // Bruker celleformatering slik at datoer blir til tekst
+  });
+}
+
 
 // Behandler Excel-data: konverterer filen til JSON, sjekker data og bygger tabellen
 function processXLSXData(arrayBuffer) {
@@ -44,8 +57,9 @@ function processXLSXData(arrayBuffer) {
     updateTableHeaders(dateColumns);
     populateTable(jsonData, headers, dateColumns);
 
-    // Kall funksjonen for å deaktivere redigering av "total til forrige runde"
-    disableEditingPreviousTotals();
+
+    disableEditingPreviousTotals(); // Kall funksjonen for å deaktivere redigering av "total til forrige runde"
+    limitForDartKast(); // Legg til begrensningen for kast-celler
 
   } catch (error) {
     console.error("Feil ved analyse av XLSX-fil:", error);
@@ -54,18 +68,6 @@ function processXLSXData(arrayBuffer) {
   }
 }
 
-
-// Konverterer XLSX-fil (arrayBuffer) til JSON med SheetJS
-function convertXLSXToJson(arrayBuffer) {
-  const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
-    type: "array",
-    cellDates: true // Konverterer datoer til JS Date-objekter
-  });
-  return XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {
-    header: 1,
-    raw: false // Bruker celleformatering slik at datoer blir til tekst
-  });
-}
 
 // Oppdaterer tabellens overskrifter med de to siste datoene fra filen
 function updateTableHeaders(dateColumns) {
@@ -76,8 +78,8 @@ function updateTableHeaders(dateColumns) {
   }
 }
 
-// Fyller tabellen med data fra Excel-filen
-// Hopper over første rad (overskrifter) og lager nye rader for resten
+
+// Fyller tabellen med data fra Excel-filen. Hopper over første rad (overskrifter) og lager nye rader for resten
 function populateTable(jsonData, headers, dateColumns) {
   const tableBody = document.querySelector("tbody");
   tableBody.innerHTML = ""; // Tøm tidligere innhold
@@ -94,6 +96,7 @@ function populateTable(jsonData, headers, dateColumns) {
   });
 }
 
+
 // Oppretter en ny rad med standardverdier og placeholder-tekst
 function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
   const row = document.createElement("tr");
@@ -108,8 +111,8 @@ function createRow(name = "", prevTotal1 = 0, prevTotal2 = 0) {
   return row;
 }
 
-// Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus)
-// Bonus gis dersom minst ett kastfelt har innhold (selv om det er "0")
+
+// Oppdaterer totalsummen for hver rad (kast 1 + kast 2 + bonus). Bonus gis dersom minst ett kastfelt har innhold (selv om det er "0")
 function updateTotalSum() {
   document.querySelectorAll("tbody tr").forEach(row => {
     const totalCell = row.querySelector(".row-total");
@@ -127,8 +130,7 @@ function updateTotalSum() {
 // Global variabel for å hindre samtidige tilbakestillinger
 let dartResetInProgress = false;
 
-// Nullstiller dart-tabellen for en ny runde
-// Fjerner innhold fra celler med "dart-kast" og totalcellen, men beholder navnecellen
+// Nullstiller dart-tabellen for en ny runde. Den fjerner innhold fra celler med "dart-kast" og totalcellen, men beholder navnecellen
 function resetTableForNewRound() {
   dartResetInProgress = true;
   const resetButton = document.getElementById("nyTavleButton");
@@ -171,10 +173,12 @@ function resetTableForNewRound() {
   }
 }
 
+
 // Legger til en ny spiller ved å opprette en ny rad
 function addNewPlayer() {
   document.querySelector("tbody").appendChild(createRow());
 }
+
 
 // Returnerer dagens dato som en streng i formatet MM/DD/YY
 function getCurrentDateHeader() {
@@ -185,8 +189,8 @@ function getCurrentDateHeader() {
   });
 }
 
-// Bygger data for nedlasting av dart-tabellen
-// Henter de tre første kolonnene (Navn, Forrige Total 1 og 2) og legger til en ny kolonne med dagens total
+
+// Bygger data for nedlasting av dart-tabellen. Den henter de tre første kolonnene (Navn, Forrige Total 1 og 2) og legger til en ny kolonne med dagens total
 function buildDownloadData() {
   const table = document.querySelector(".table");
   if (!table) {
@@ -224,8 +228,8 @@ function buildDownloadData() {
   return data;
 }
 
-// Laster ned dart-tabellen som en Excel-fil med 4 kolonner:
-// Navn, Forrige Total 1, Forrige Total 2 og dagens total (overskrift = dagens dato)
+
+// Laster ned dart-tabellen som en Excel-fil med 4 kolonner: Navn, Forrige Total 1, Forrige Total 2 og dagens total (overskrift = dagens dato)
 function downloadXLSX() {
   const data = buildDownloadData();
   if (!data) return;
@@ -254,7 +258,8 @@ function saveTableData() {
   console.log("Data lagret og total sum oppdatert for kast 1 og kast 2");
 }
 
-// Kalkulerer og viser spilleren med høyest poengsum
+
+// Beregner og viser spilleren med høyest totalsum.
 function displayWinner() {
   const winnerDisplay = document.getElementById("winnerDisplay");
   const winnerBox = document.querySelector(".winner-box");
@@ -268,9 +273,12 @@ function displayWinner() {
   let highestScore = 0;
   let winnerName = "Ingen spillere";
 
+  // Gå gjennom hver rad i tabellen.
   rows.forEach(row => {
+    // Forvent at navnet står i den første cellen.
     const name = row.querySelector("th")?.textContent.trim();
-    const score = parseInt(row.querySelector(".row-total")?.textContent) || 0;
+    const score = parseInt(row.querySelector(".row-total")?.textContent) || 0; // Hent poengsummen fra den siste cellen i raden.
+
     if (score > highestScore) {
       highestScore = score;
       winnerName = name;
@@ -287,6 +295,7 @@ function displayWinner() {
   console.log("displayWinner kalt");
 }
 
+
 // Skjuler vinnerboksen
 function hideWinnerBox() {
   const winnerBox = document.querySelector(".winner-box");
@@ -294,6 +303,7 @@ function hideWinnerBox() {
     winnerBox.style.display = "none";
   }
 }
+
 
 // Viser en feilmelding i 3 sekunder
 function showMessage(message) {
