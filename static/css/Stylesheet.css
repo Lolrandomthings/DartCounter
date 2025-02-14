@@ -30,16 +30,14 @@
     padding-left: 140px;
 }
 
-
-#link-style{
-    color: white;
-    size: 12px;
-    text-decoration: none;
-    font-size: 1.2rem;
-    letter-spacing: 0.1rem;
+.links {
+    display: flex;
+    gap: 30px;
 }
-#link-style:hover{
-    color:#0067c4;
+
+a:link {
+    color: white;   
+}
 
 a:link:hover {
     color: #dbe6ec;
@@ -47,10 +45,8 @@ a:link:hover {
 
 h1,
 h2 {
-    font-size: 40px;
+    font-size: 30px;
     margin: 0;
-    letter-spacing: 0.1rem;
-    font-weight: 800;
 }
 
 body {
@@ -97,7 +93,7 @@ body {
     transform: translate(-50%, -50%);
     width: 100%;
     max-width: 50%;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
     margin-top: 25px;
     margin-left: 0;
     cursor: pointer;
