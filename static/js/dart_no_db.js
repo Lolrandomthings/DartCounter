@@ -36,19 +36,24 @@ function processXLSXData(arrayBuffer) {
       return;
     }
     const headers = jsonData[0]; // Første rad med overskrifter
-    const dateColumns = headers.slice(-2); // De to siste kolonnene antas å være datoer
+    const dateColumns = headers.slice(-2); // De to siste antas å være datoer
     if (dateColumns.length < 2) {
       showMessage("Tabellen må inneholde minst 1 kolonne med forrige dato.");
       return;
     }
     updateTableHeaders(dateColumns);
     populateTable(jsonData, headers, dateColumns);
+
+    // Kall funksjonen for å deaktivere redigering av "total til forrige runde"
+    disableEditingPreviousTotals();
+
   } catch (error) {
     console.error("Feil ved analyse av XLSX-fil:", error);
     showMessage("Feil ved analyse av XLSX-fil, vennligst prøv igjen.");
     return;
   }
 }
+
 
 // Konverterer XLSX-fil (arrayBuffer) til JSON med SheetJS
 function convertXLSXToJson(arrayBuffer) {
@@ -237,6 +242,11 @@ function downloadXLSX() {
 function saveTableData() {
   if (!document.querySelector("tbody tr")) {
     showMessage("Kan ikke lagre data. Det er ingen spillere i tabellen.");
+    return;
+  }
+
+  if (!validateTableData()) {
+    // Hvis validering feiler, ikke kjør videre
     return;
   }
   updateTotalSum();
