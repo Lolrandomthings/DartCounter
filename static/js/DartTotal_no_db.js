@@ -292,6 +292,7 @@ function saveTableData() {
         return;
     }
     updateTotalSum();
+    sortTableByTotal();
     displayWinner();
     console.log("Lagrer data og oppdaterer totalsum for sesongen.");
 }
@@ -334,6 +335,31 @@ function displayWinner() {
     winnerBox.style.display = "block";
     console.log("displayWinner kalt");
 }
+
+// Sorterer tabellen slik at rader med høyest poeng vises øverst.
+function sortTableByTotal() {
+    const table = document.querySelector(".table");
+    if (!table) return;
+  
+    const tbody = table.querySelector("tbody");
+    if (!tbody) return;
+  
+    // Konverterer NodeList til et array
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+  
+    // Sorter radene basert på verdien i den siste cellen (antatt å være totalsummen)
+    rows.sort((a, b) => {
+      // Her henter vi siste cellen i hver rad
+      const totalA = parseInt(a.querySelector("td:last-child").textContent) || 0;
+      const totalB = parseInt(b.querySelector("td:last-child").textContent) || 0;
+      return totalB - totalA; // Sorterer synkende: høyeste poeng først
+    });
+  
+    // Tømmer tbody og legger til de sorterte radene
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(row));
+  }
+  
 
 
 // Skjuler vinnerboksen.
